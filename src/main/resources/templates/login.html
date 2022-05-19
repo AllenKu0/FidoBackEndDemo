@@ -35,7 +35,9 @@
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: "username=aaaa"
+            body: JSON.stringify({
+                username: "aaaa",
+            })
         })
             .then(response => {
                 // console.log("response: " + response.json())
