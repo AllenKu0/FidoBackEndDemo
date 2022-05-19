@@ -8,10 +8,9 @@ import com.example.springboot.repository.UserRepository;
 import com.example.springboot.request.FinishAuthRequest;
 import com.example.springboot.request.UserRegisterRequest;
 import com.example.springboot.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.yubico.webauthn.FinishRegistrationOptions;
-import com.yubico.webauthn.RegistrationResult;
-import com.yubico.webauthn.RelyingParty;
+import com.yubico.webauthn.*;
 import com.yubico.webauthn.data.*;
 import com.yubico.webauthn.exception.RegistrationFailedException;
 import io.swagger.annotations.ApiOperation;
@@ -70,6 +69,27 @@ public class UserController {
 
 
 
+    @PostMapping("/login")
+    @ResponseBody
+    public String startLogin(
+            @RequestParam String username
+    ) {
+        return userService.startLogin(username,relyingParty);
+    }
+    @PostMapping("/finishauth")
+    @ResponseBody
+    public ModelAndView finishRegisration(
+            FinishAuthRequest request
+    ) {
+        try {
+            userService.finishAuth(request, relyingParty);
+            return new ModelAndView("redirect:/login", HttpStatus.SEE_OTHER);
+        } catch (RegistrationFailedException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Registration failed.", e);
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to save credenital, please try again!", e);
+        }
+    }
 
 
 }

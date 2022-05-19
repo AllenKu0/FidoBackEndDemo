@@ -44,18 +44,5 @@ public class ViewController {
     }
 
 
-    @PostMapping("/finishauth")
-    @ResponseBody
-    public ModelAndView finishRegisration(
-            FinishAuthRequest request
-    ) {
-        try {
-            userService.finishAuth(request, relyingParty);
-            return new ModelAndView("redirect:/login", HttpStatus.SEE_OTHER);
-        } catch (RegistrationFailedException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Registration failed.", e);
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to save credenital, please try again!", e);
-        }
-    }
+
 }

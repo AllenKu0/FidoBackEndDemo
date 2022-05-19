@@ -12,10 +12,7 @@ import com.example.springboot.utitlity.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.yubico.webauthn.FinishRegistrationOptions;
-import com.yubico.webauthn.RegistrationResult;
-import com.yubico.webauthn.RelyingParty;
-import com.yubico.webauthn.StartRegistrationOptions;
+import com.yubico.webauthn.*;
 import com.yubico.webauthn.data.*;
 import com.yubico.webauthn.exception.RegistrationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +43,10 @@ public class UserService {
 
 
     private final Cache<String, PublicKeyCredentialCreationOptions> registrationCache;
-
+    private final Cache<String,  AssertionRequest> loginCache;
     public UserService() {
+        this.loginCache = Caffeine.newBuilder().maximumSize(1000)
+                .expireAfterAccess(5, TimeUnit.MINUTES).build();
         this.registrationCache = Caffeine.newBuilder().maximumSize(1000)
                 .expireAfterAccess(5, TimeUnit.MINUTES).build();
     }
@@ -121,6 +120,18 @@ public class UserService {
         }
     }
 
+
+    public String startLogin(String username, RelyingParty relyingParty){
+        AssertionRequest request = relyingParty.startAssertion(StartAssertionOptions.builder()
+                .username(username)
+                .build());
+        try {
+            loginCache.put(username,request);
+            return request.toCredentialsGetJson();
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
 
     public void finishAuth(FinishAuthRequest request, RelyingParty relyingParty) throws IOException, RegistrationFailedException {
         Optional<User> user = findByEmail(request.getUsername());
