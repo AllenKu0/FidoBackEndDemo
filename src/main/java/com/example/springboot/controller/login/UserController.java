@@ -145,7 +145,15 @@ public class UserController {
     public String startLogin(
             @RequestBody String username
     ) {
-        return userService.startLogin("aaaa",relyingParty);
+        AssertionRequest request = relyingParty.startAssertion(StartAssertionOptions.builder()
+                .username("aaaa")
+                .build());
+        try {
+            loginCache.put(username,request);
+            return request.toCredentialsGetJson();
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
 
