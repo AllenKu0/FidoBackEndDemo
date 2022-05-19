@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,8 +26,8 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/users")
+@Controller
+//@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
@@ -36,9 +37,21 @@ public class UserController {
     private RelyingParty relyingParty;
 
     @PostMapping("/register")
-    @ApiOperation(value = "用户注册")
-    public ResponseEntity<?> register(@RequestBody @Valid UserRegisterRequest userRegister) {
-        return new ResponseEntity<>(userService.register(userRegister), HttpStatus.OK);
+    @ResponseBody
+    public String register(@RequestBody @Valid UserRegisterRequest userRegister) {
+
+        try {
+            return userService.register(userRegister);
+        }
+        catch (Exception e){
+
+            System.out.print("Exception: "+e);
+            return "fuck";
+        }
+
+
+
+
     }
 
 

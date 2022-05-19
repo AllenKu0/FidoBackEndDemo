@@ -20,15 +20,16 @@ public class ViewController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String welcome() {
-        return "index";
+        return "home";
     }
 
     @GetMapping("/register")
     public String registerUser(Model model) {
         return "register";
     }
+
 
     @PostMapping("/finishauth")
     @ResponseBody
