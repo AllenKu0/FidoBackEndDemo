@@ -143,7 +143,7 @@ public class UserController {
     @PostMapping("/login")
     @ResponseBody
     public String startLogin(
-            @RequestParam String username
+            @RequestBody String username
     ) {
         return userService.startLogin(username,relyingParty);
     }
