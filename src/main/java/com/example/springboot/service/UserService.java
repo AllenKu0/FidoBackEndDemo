@@ -18,7 +18,6 @@ import com.yubico.webauthn.StartRegistrationOptions;
 import com.yubico.webauthn.data.*;
 import com.yubico.webauthn.exception.RegistrationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,7 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public String register(UserRegisterRequest dto) {
+    public User register(UserRegisterRequest dto) {
         Optional<User> userOptional = findByEmail(dto.getUsername());
         if (userOptional.isPresent()) {
             throw new AlreadyExistsException("Save failed, the user name already exist.");
@@ -67,14 +66,9 @@ public class UserService {
         User user = new User(userIdentity);
         String cryptPassword = bCryptPasswordEncoder.encode(dto.getPassword());
         user.setPassword(cryptPassword);
+        userRepository.save(user);
+return user;
 
-        try {
-            userRepository.save(user);
-//            , session
-            return newAuthRegistration(user);
-        } catch (DataIntegrityViolationException e) {
-            throw new AlreadyExistsException("Save failed, the user name already exist.");
-        }
     }
 
     public Optional<User> findByEmail(String userName) {
@@ -82,7 +76,7 @@ public class UserService {
     }
 
 
-    private String newAuthRegistration(
+    public String newAuthRegistration(
             User user
     ) {
         Optional<User> existingUser = userRepository.findByHandle(user.getHandle());
@@ -93,9 +87,10 @@ public class UserService {
                     .build();
             PublicKeyCredentialCreationOptions registration = relyingParty.startRegistration(registrationOptions);
 //            HttpSession session
-            this.registrationCache.put(userIdentity.getDisplayName(), registration);
+
 //            registrationCache.setAttribute(userIdentity.getDisplayName(), registration);
             try {
+                this.registrationCache.put(userIdentity.getDisplayName(), registration);
                 return registration.toCredentialsCreateJson();
             } catch (JsonProcessingException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing JSON.", e);

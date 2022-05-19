@@ -9,7 +9,7 @@
         <div th:replace="header :: header">...</div>
         <div class="pa4 black-80">
             <div id="errors"></div>
-            <form class="measure center" id="form" action="/registerauth" method="POST">
+            <form class="measure center" id="form" >
                 <legend class="f2 f1-l fw2 mb0 lh-title">Register Authentication</legend>
                 <div class="mt3">
                     <label class="db fw6 lh-copy" for="username">Username:</label>
@@ -33,5 +33,80 @@
     </body>
     <script src="javascript/base64js.min.js"></script>
     <script src="javascript/custom.js"></script>
-    <script src="javascript/registerauth.js"></script>
+    <script>
+        document.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const userRequest=new UserRequest(
+                "aaa",
+               "aaaa",
+               "aaaa"
+            )
+
+            console.log("submit" + userRequest.username + userRequest.displayName + userRequest.password       )
+            fetch('http://localhost:8090/register', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username:"aaaa",
+                    displayName:"aaaa",
+                    password:"aaaaa"
+                })
+            })
+                .then(response => initialCheckStatus(response))
+                .then(credentialCreateJson => ({
+                    publicKey: {
+                        ...credentialCreateJson.publicKey,
+                        challenge: base64urlToUint8array(credentialCreateJson.publicKey.challenge),
+                        user: {
+                            ...credentialCreateJson.publicKey.user,
+                            id: base64urlToUint8array(credentialCreateJson.publicKey.user.id),
+                        },
+                        excludeCredentials: credentialCreateJson.publicKey.excludeCredentials.map(credential => ({
+                            ...credential,
+                            id: base64urlToUint8array(credential.id),
+                        })),
+                        extensions: credentialCreateJson.publicKey.extensions,
+                    },
+                }))
+                .then(credentialCreateOptions =>
+                    navigator.credentials.create(credentialCreateOptions))
+                .then(publicKeyCredential => ({
+                    type: publicKeyCredential.type,
+                    id: publicKeyCredential.id,
+                    response: {
+                        attestationObject: uint8arrayToBase64url(publicKeyCredential.response.attestationObject),
+                        clientDataJSON: uint8arrayToBase64url(publicKeyCredential.response.clientDataJSON),
+                        transports: publicKeyCredential.response.getTransports && publicKeyCredential.response.getTransports() || [],
+                    },
+                    clientExtensionResults: publicKeyCredential.getClientExtensionResults(),
+                }))
+                .then((encodedResult) => {
+                    const form = document.getElementById("form");
+                    const formData = new FormData(form);
+                    formData.append("credential", JSON.stringify(encodedResult));
+                    return fetch("/finishauth", {
+                        method: 'POST',
+                        body: formData
+                    })
+                })
+                .then((response) => {
+                    followRedirect(response);
+                })
+                .catch((error) => {
+                    displayError(error);
+                });
+        })
+
+        class UserRequest {
+            constructor(data) {
+                this.username = data.username;
+                this.displayName = data.displayName;
+                this.password = data.password;
+            }
+        }
+    </script>
 </html>

@@ -2,6 +2,7 @@ package com.example.springboot.controller.login;
 
 import com.example.springboot.entity.Authenticator;
 import com.example.springboot.entity.User;
+import com.example.springboot.exception.AlreadyExistsException;
 import com.example.springboot.repository.AuthenticatorRepository;
 import com.example.springboot.repository.UserRepository;
 import com.example.springboot.request.UserRegisterRequest;
@@ -13,6 +14,7 @@ import com.yubico.webauthn.data.*;
 import com.yubico.webauthn.exception.RegistrationFailedException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,21 +41,26 @@ public class UserController {
     @PostMapping("/register")
     @ResponseBody
     public String register(@RequestBody @Valid UserRegisterRequest userRegister) {
-
         try {
-            return userService.register(userRegister);
+            User user=userService.register(userRegister);
+//            , session
+            return newAuthRegistration(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new AlreadyExistsException("Save failed, the user name already exist.");
         }
-        catch (Exception e){
 
-            System.out.print("Exception: "+e);
-            return "fuck";
-        }
 
 
 
 
     }
-
+    @PostMapping("/registerauth")
+    @ResponseBody
+    public String newAuthRegistration(
+            @RequestParam User user
+    ){
+        return userService.newAuthRegistration(user);
+    }
 
 
 
