@@ -45,7 +45,7 @@ public class UserService {
     private AuthenticatorRepository authenticatorRepository;
 
 
-    private final Cache<String, PublicKeyCredentialCreationOptions> registrationCache;
+    private final Cache<ByteArray, PublicKeyCredentialCreationOptions> registrationCache;
     private final Cache<String,  AssertionRequest> loginCache;
     public UserService() {
         this.loginCache = Caffeine.newBuilder().maximumSize(1000)
@@ -94,7 +94,7 @@ public class UserService {
 //            registrationCache.setAttribute(userIdentity.getDisplayName(), registration);
             try {
                 PublicKeyCredentialCreationOptions registration = relyingParty.startRegistration(registrationOptions);
-                this.registrationCache.put(userIdentity.getDisplayName(), registration);
+                this.registrationCache.put(userIdentity.getId(), registration);
                 return registration.toCredentialsCreateJson();
             } catch (JsonProcessingException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing JSON.", e);
@@ -120,8 +120,8 @@ public class UserService {
     public void finishAuth(FinishAuthRequest request, RelyingParty relyingParty) throws IOException, RegistrationFailedException {
         Optional<User> user = findByEmail(request.getUsername());
         if (user.isPresent()) {
-            PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getEmail());
-            this.registrationCache.invalidate(user.get().getEmail());
+            PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getHandle());
+            this.registrationCache.invalidate(user.get().getHandle());
 
             if (requestOptions != null) {
                 PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
