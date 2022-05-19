@@ -40,7 +40,7 @@
             })
         })
             .then(response => {
-                console.log("response: " + response.json())
+                // console.log("response: " + response.json())
                 initialCheckStatus(response)
             })
             .then(credentialGetJson => ({
@@ -111,7 +111,7 @@
     }
 
     function initialCheckStatus(response) {
-        console.log("initalcheckStatus: " + response.json())
+        // console.log("initalcheckStatus: " + response.json())
         checkStatus(response);
         return response.json();
     }
