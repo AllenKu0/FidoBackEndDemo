@@ -49,10 +49,12 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private AuthenticatorRepository authenticatorRepository;
-    UserController(RelyingParty relyingPary, Cache<String, PublicKeyCredentialCreationOptions> registrationCache, Cache<String, AssertionRequest> loginCache) {
+   public UserController(RelyingParty relyingPary) {
         this.relyingParty = relyingPary;
-        this.registrationCache = registrationCache;
-        this.loginCache = loginCache;
+       this.loginCache = Caffeine.newBuilder().maximumSize(200000)
+               .expireAfterAccess(5, TimeUnit.MINUTES).build();
+       this.registrationCache = Caffeine.newBuilder().maximumSize(200000)
+               .expireAfterAccess(5, TimeUnit.MINUTES).build();
     }
     @PostMapping("/register")
     @ResponseBody
