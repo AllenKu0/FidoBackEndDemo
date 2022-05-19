@@ -17,7 +17,8 @@
         <input type="hidden" id="credential" name="credential">
     </form>
     <button class="ba bw1 mv2 f6 no-underline br-pill ph3 pv2 dib white b--purple bg-purple" id="submit"
-            onclick="checkCredentials();">Sumbit
+            type="submit"  >Sumbit
+<!--        onclick="checkCredentials();"-->
     </button>
 </div>
 </body>
@@ -26,9 +27,8 @@
 <!--    <script src="javascript/login.js"></script>-->
 
 <script>
-    async function checkCredentials() {
-        this.form = document.getElementById("form");
-        const formData = new FormData(form);
+    document.addEventListener("submit", (e) => {
+        e.preventDefault();
         fetch('http://localhost:8090/login', {
             method: 'POST',
             headers: {
@@ -73,6 +73,11 @@
                 this.form.submit();
             })
             .catch(error => displayError(error))
+    })
+    async function checkCredentials() {
+        this.form = document.getElementById("form");
+        const formData = new FormData(form);
+
     }
 
 
