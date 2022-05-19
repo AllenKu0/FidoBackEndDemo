@@ -92,7 +92,7 @@ public class UserService {
 //            registrationCache.setAttribute(userIdentity.getDisplayName(), registration);
             try {
                 PublicKeyCredentialCreationOptions registration = relyingParty.startRegistration(registrationOptions);
-                this.registrationCache.put(userIdentity.getDisplayName(), registration);
+                this.registrationCache.put(existingUser.get().getEmail(), registration);
                 return registration.toCredentialsCreateJson();
             } catch (JsonProcessingException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing JSON.", e);
