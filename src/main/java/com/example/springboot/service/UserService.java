@@ -6,7 +6,6 @@ import com.example.springboot.exception.AlreadyExistsException;
 import com.example.springboot.repository.AuthenticatorRepository;
 import com.example.springboot.repository.UserRepository;
 import com.example.springboot.request.FinishAuthRequest;
-import com.example.springboot.request.StartLoginRequest;
 import com.example.springboot.request.UserRegisterRequest;
 import com.example.springboot.request.WelcomRequest;
 import com.example.springboot.utitlity.UserMapper;
@@ -105,12 +104,12 @@ public class UserService {
     }
 
 
-    public String startLogin(StartLoginRequest username, RelyingParty relyingParty){
+    public String startLogin(String username, RelyingParty relyingParty){
         AssertionRequest request = relyingParty.startAssertion(StartAssertionOptions.builder()
-                .username(username.getUsername())
+                .username(username)
                 .build());
         try {
-            loginCache.put(username.getUsername(),request);
+            loginCache.put(username,request);
             return request.toCredentialsGetJson();
         } catch (JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

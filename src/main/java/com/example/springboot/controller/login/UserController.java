@@ -143,9 +143,9 @@ public class UserController {
     @PostMapping("/login")
     @ResponseBody
     public String startLogin(
-            StartLoginRequest loginRequest
+            @RequestParam String username
     ) {
-        return userService.startLogin(loginRequest,relyingParty);
+        return userService.startLogin(username,relyingParty);
     }
 
 
