@@ -89,7 +89,7 @@
                     const form = document.getElementById("form");
                     const formData = new FormData(form);
                     formData.append("credential", JSON.stringify(encodedResult));
-                    return fetch("/finishauth", {
+                    return fetch("http://localhost:8090/finishauth", {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json',
