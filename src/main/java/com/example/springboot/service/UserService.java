@@ -121,6 +121,8 @@ public class UserService {
         Optional<User> user = findByEmail(request.getUsername());
         if (user.isPresent()) {
             PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getEmail());
+            this.registrationCache.invalidate(user.get().getEmail());
+
             if (requestOptions != null) {
                 PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
                         PublicKeyCredential.parseRegistrationResponseJson(request.getCredential());
