@@ -94,32 +94,13 @@ public class UserService {
 //            registrationCache.setAttribute(userIdentity.getDisplayName(), registration);
             try {
                 PublicKeyCredentialCreationOptions registration = relyingParty.startRegistration(registrationOptions);
-                this.registrationCache.put(existingUser.get().getEmail(), registration);
+                this.registrationCache.put(userIdentity.getDisplayName(), registration);
                 return registration.toCredentialsCreateJson();
             } catch (JsonProcessingException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing JSON.", e);
             }
         } else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmail() + " does not exist. Please register.");
-        }
-    }
-
-
-    public void registerEnd(String username, String credential, String credname, RelyingParty relyingParty) throws IOException, RegistrationFailedException {
-        Optional<User> user = findByEmail(username);
-        if (user.isPresent()) {
-            PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getEmail());
-            if (requestOptions != null) {
-                PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
-                        PublicKeyCredential.parseRegistrationResponseJson(credential);
-                FinishRegistrationOptions options = FinishRegistrationOptions.builder()
-                        .request(requestOptions)
-                        .response(pkc)
-                        .build();
-                RegistrationResult result = relyingParty.finishRegistration(options);
-                Authenticator savedAuth = new Authenticator(result, pkc.getResponse(), user.get(), credname);
-                authenticatorRepository.save(savedAuth);
-            }
         }
     }
 
