@@ -5,6 +5,7 @@ import com.example.springboot.entity.User;
 import com.example.springboot.exception.AlreadyExistsException;
 import com.example.springboot.repository.AuthenticatorRepository;
 import com.example.springboot.repository.UserRepository;
+import com.example.springboot.request.FinishAuthRequest;
 import com.example.springboot.request.UserRegisterRequest;
 import com.example.springboot.utitlity.UserMapper;
 import com.example.springboot.utitlity.Utility;
@@ -121,4 +122,25 @@ public class UserService {
     }
 
 
+    public void finishAuth(FinishAuthRequest request, RelyingParty relyingParty) throws IOException, RegistrationFailedException {
+        Optional<User> user = findByEmail(request.getUsername());
+        if (user.isPresent()) {
+            PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getEmail());
+            if (requestOptions != null) {
+                PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
+                        PublicKeyCredential.parseRegistrationResponseJson(request.getCredential());
+                FinishRegistrationOptions options = FinishRegistrationOptions.builder()
+                        .request(requestOptions)
+                        .response(pkc)
+                        .build();
+                RegistrationResult result = relyingParty.finishRegistration(options);
+                Authenticator savedAuth = new Authenticator(result, pkc.getResponse(), user.get(), request.getCredname());
+                authenticatorRepository.save(savedAuth);
+            } else {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Cached request expired. Try to register again!");
+            }
+
+
+        }
+    }
 }

@@ -5,7 +5,10 @@ async function checkCredentials() {
         method: 'POST',
         body: formData
     })
-    .then(response => initialCheckStatus(response))
+    .then(response => {
+        console.log("response: "+response.json())
+        initialCheckStatus(response)
+    })
     .then(credentialGetJson => ({
         publicKey: {
         ...credentialGetJson.publicKey,

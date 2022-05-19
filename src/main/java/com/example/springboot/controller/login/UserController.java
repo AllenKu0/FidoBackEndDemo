@@ -5,6 +5,7 @@ import com.example.springboot.entity.User;
 import com.example.springboot.exception.AlreadyExistsException;
 import com.example.springboot.repository.AuthenticatorRepository;
 import com.example.springboot.repository.UserRepository;
+import com.example.springboot.request.FinishAuthRequest;
 import com.example.springboot.request.UserRegisterRequest;
 import com.example.springboot.service.UserService;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -69,26 +70,6 @@ public class UserController {
 
 
 
-//    @PostMapping("/register")
-//    @ResponseBody
-//    public String newUserRegistration(
-//            @RequestParam String username,
-//            @RequestParam String display,
-//            HttpSession session
-//    ) {
-//        AppUser existingUser = service.getUserRepo().findByUsername(username);
-//        if (existingUser == null) {
-//            UserIdentity userIdentity = UserIdentity.builder()
-//                    .name(username)
-//                    .displayName(display)
-//                    .id(Utility.generateRandom(32))
-//                    .build();
-//            AppUser saveUser = new AppUser(userIdentity);
-//            service.getUserRepo().save(saveUser);
-//            String response = newAuthRegistration(saveUser, session);
-//            return response;
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username " + username + " already exists. Choose a new name.");
-//        }
-//    }
+
+
 }

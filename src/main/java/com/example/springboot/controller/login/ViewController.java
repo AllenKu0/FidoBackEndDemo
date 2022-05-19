@@ -1,5 +1,6 @@
 package com.example.springboot.controller.login;
 
+import com.example.springboot.request.FinishAuthRequest;
 import com.example.springboot.service.UserService;
 import com.yubico.webauthn.RelyingParty;
 import com.yubico.webauthn.exception.RegistrationFailedException;
@@ -26,6 +27,7 @@ public class ViewController {
     ViewController(RelyingParty relyingPary) {
         this.relyingParty = relyingPary;
     }
+
     @GetMapping("/home")
     public String welcome() {
         return "home";
@@ -36,16 +38,19 @@ public class ViewController {
         return "register";
     }
 
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
+    }
+
 
     @PostMapping("/finishauth")
     @ResponseBody
     public ModelAndView finishRegisration(
-            @RequestParam String credential,
-            @RequestParam String username,
-            @RequestParam String credname
+            FinishAuthRequest request
     ) {
         try {
-            userService.registerEnd(username, credential, credname,relyingParty);
+            userService.finishAuth(request, relyingParty);
             return new ModelAndView("redirect:/login", HttpStatus.SEE_OTHER);
         } catch (RegistrationFailedException e) {
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Registration failed.", e);
