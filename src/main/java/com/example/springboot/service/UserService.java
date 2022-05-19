@@ -42,7 +42,7 @@ public class UserService {
 
     @Autowired
     private AuthenticatorRepository authenticatorRepository;
-    private RelyingParty relyingParty;
+
 
     private final Cache<String, PublicKeyCredentialCreationOptions> registrationCache;
 
@@ -67,7 +67,7 @@ public class UserService {
         String cryptPassword = bCryptPasswordEncoder.encode(dto.getPassword());
         user.setPassword(cryptPassword);
         userRepository.save(user);
-return user;
+        return user;
 
     }
 
@@ -77,19 +77,20 @@ return user;
 
 
     public String newAuthRegistration(
-            User user
-    ) {
+            User user,
+            RelyingParty relyingParty) {
         Optional<User> existingUser = userRepository.findByHandle(user.getHandle());
         if (existingUser.isPresent()) {
             UserIdentity userIdentity = user.toUserIdentity();
             StartRegistrationOptions registrationOptions = StartRegistrationOptions.builder()
                     .user(userIdentity)
                     .build();
-            PublicKeyCredentialCreationOptions registration = relyingParty.startRegistration(registrationOptions);
+
 //            HttpSession session
 
 //            registrationCache.setAttribute(userIdentity.getDisplayName(), registration);
             try {
+                PublicKeyCredentialCreationOptions registration = relyingParty.startRegistration(registrationOptions);
                 this.registrationCache.put(userIdentity.getDisplayName(), registration);
                 return registration.toCredentialsCreateJson();
             } catch (JsonProcessingException e) {
@@ -101,7 +102,7 @@ return user;
     }
 
 
-    public void registerEnd(String username, String credential, String credname) throws IOException, RegistrationFailedException {
+    public void registerEnd(String username, String credential, String credname, RelyingParty relyingParty) throws IOException, RegistrationFailedException {
         Optional<User> user = findByEmail(username);
         if (user.isPresent()) {
             PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getEmail());

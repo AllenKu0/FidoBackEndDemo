@@ -7,6 +7,7 @@ import com.example.springboot.repository.AuthenticatorRepository;
 import com.example.springboot.repository.UserRepository;
 import com.example.springboot.request.UserRegisterRequest;
 import com.example.springboot.service.UserService;
+import com.github.benmanes.caffeine.cache.Cache;
 import com.yubico.webauthn.FinishRegistrationOptions;
 import com.yubico.webauthn.RegistrationResult;
 import com.yubico.webauthn.RelyingParty;
@@ -38,6 +39,10 @@ public class UserController {
 
     private RelyingParty relyingParty;
 
+
+    UserController(RelyingParty relyingPary) {
+        this.relyingParty = relyingPary;
+    }
     @PostMapping("/register")
     @ResponseBody
     public String register(@RequestBody @Valid UserRegisterRequest userRegister) {
@@ -59,7 +64,7 @@ public class UserController {
     public String newAuthRegistration(
             @RequestParam User user
     ){
-        return userService.newAuthRegistration(user);
+        return userService.newAuthRegistration(user,relyingParty);
     }
 
 

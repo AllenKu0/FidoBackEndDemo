@@ -1,6 +1,7 @@
 package com.example.springboot.controller.login;
 
 import com.example.springboot.service.UserService;
+import com.yubico.webauthn.RelyingParty;
 import com.yubico.webauthn.exception.RegistrationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,12 @@ import java.io.IOException;
 public class ViewController {
     @Autowired
     private UserService userService;
+    private RelyingParty relyingParty;
 
+
+    ViewController(RelyingParty relyingPary) {
+        this.relyingParty = relyingPary;
+    }
     @GetMapping("/home")
     public String welcome() {
         return "home";
@@ -39,7 +45,7 @@ public class ViewController {
             @RequestParam String credname
     ) {
         try {
-            userService.registerEnd(username, credential, credname);
+            userService.registerEnd(username, credential, credname,relyingParty);
             return new ModelAndView("redirect:/login", HttpStatus.SEE_OTHER);
         } catch (RegistrationFailedException e) {
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Registration failed.", e);
