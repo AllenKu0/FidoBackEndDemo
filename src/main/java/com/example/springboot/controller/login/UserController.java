@@ -8,6 +8,7 @@ import com.example.springboot.repository.UserRepository;
 import com.example.springboot.request.FinishAuthRequest;
 import com.example.springboot.request.StartLoginRequest;
 import com.example.springboot.request.UserRegisterRequest;
+import com.example.springboot.request.WelcomRequest;
 import com.example.springboot.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -16,6 +17,7 @@ import com.yubico.webauthn.data.*;
 import com.yubico.webauthn.exception.AssertionFailedException;
 import com.yubico.webauthn.exception.RegistrationFailedException;
 import io.swagger.annotations.ApiOperation;
+import jdk.internal.icu.text.NormalizerBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -96,29 +98,15 @@ public class UserController {
 
     @PostMapping("/welcome")
     public String finishLogin(
-            @RequestParam String credential,
-            @RequestParam String username,
-            Model model,
-            HttpSession session
+          @RequestBody WelcomRequest request,
+          Model model
     ) {
-        try {
-            PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs> pkc;
-            pkc = PublicKeyCredential.parseAssertionResponseJson(credential);
-            AssertionRequest request = (AssertionRequest)session.getAttribute(username);
-            AssertionResult result = relyingParty.finishAssertion(FinishAssertionOptions.builder()
-                    .request(request)
-                    .response(pkc)
-                    .build());
-            if (result.isSuccess()) {
-                model.addAttribute("username", username);
-                return "welcome";
-            } else {
-                return "index";
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Authentication failed", e);
-        } catch (AssertionFailedException e) {
-            throw new RuntimeException("Authentication failed", e);
+       ;
+        if (userService.finishLogin(request,relyingParty).isSuccess()) {
+            model.addAttribute("username", request.getUsername());
+            return "welcome";
+        } else {
+            return "index";
         }
 
     }

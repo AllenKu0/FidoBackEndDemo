@@ -8,6 +8,7 @@ import com.example.springboot.repository.UserRepository;
 import com.example.springboot.request.FinishAuthRequest;
 import com.example.springboot.request.StartLoginRequest;
 import com.example.springboot.request.UserRegisterRequest;
+import com.example.springboot.request.WelcomRequest;
 import com.example.springboot.utitlity.UserMapper;
 import com.example.springboot.utitlity.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,6 +16,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.yubico.webauthn.*;
 import com.yubico.webauthn.data.*;
+import com.yubico.webauthn.exception.AssertionFailedException;
 import com.yubico.webauthn.exception.RegistrationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -153,6 +155,24 @@ public class UserService {
             }
 
 
+        }
+    }
+
+
+    public AssertionResult finishLogin(WelcomRequest welcomRequest, RelyingParty relyingParty){
+        try {
+            PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs> pkc;
+            pkc = PublicKeyCredential.parseAssertionResponseJson(welcomRequest.getCredential());
+            AssertionRequest request = (AssertionRequest)loginCache.getIfPresent(welcomRequest.getUsername());
+            AssertionResult result = relyingParty.finishAssertion(FinishAssertionOptions.builder()
+                    .request(request)
+                    .response(pkc)
+                    .build());
+           return result;
+        } catch (IOException e) {
+            throw new RuntimeException("Authentication failed", e);
+        } catch (AssertionFailedException e) {
+            throw new RuntimeException("Authentication failed", e);
         }
     }
 }
