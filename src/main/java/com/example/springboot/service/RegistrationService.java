@@ -29,7 +29,7 @@ public class RegistrationService implements CredentialRepository {
     public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String username) {
         Optional<User> user = userRepo.findByEmail(username);
         if (user.isPresent()){
-            List<Authenticator> auth = authRepository.findAllByUser(user);
+            List<Authenticator> auth = authRepository.findAllByUser(user.get());
             return auth.stream()
                     .map(
                             credential ->

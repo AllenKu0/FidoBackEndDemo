@@ -60,6 +60,7 @@ public class UserController {
     @ResponseBody
     public String register(@RequestBody @Valid UserRegisterRequest userRegister) {
         try {
+            System.out.print("fuck fuck fuck ");
             User user=userService.register(userRegister);
 //            , session
             return newAuthRegistration(user);
