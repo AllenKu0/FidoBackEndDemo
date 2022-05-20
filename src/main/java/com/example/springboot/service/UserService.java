@@ -157,4 +157,15 @@ public class UserService {
             throw new RuntimeException("Authentication failed", e);
         }
     }
+
+    public AssertionResult finishLogin(String credential, String username, RelyingParty relyingParty) throws IOException, AssertionFailedException {
+        PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs> pkc;
+        pkc = PublicKeyCredential.parseAssertionResponseJson(credential);
+        AssertionRequest request = (AssertionRequest)loginCache.getIfPresent(username);
+        AssertionResult result = relyingParty.finishAssertion(FinishAssertionOptions.builder()
+                .request(request)
+                .response(pkc)
+                .build());
+        return result;
+    }
 }

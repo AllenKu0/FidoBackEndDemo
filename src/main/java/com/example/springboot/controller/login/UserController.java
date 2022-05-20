@@ -167,14 +167,8 @@ public class UserController {
     ) {
        ;
         try {
-            PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs> pkc;
-            pkc = PublicKeyCredential.parseAssertionResponseJson(credential);
-            AssertionRequest request = (AssertionRequest)loginCache.getIfPresent(username);
-            AssertionResult result = relyingParty.finishAssertion(FinishAssertionOptions.builder()
-                    .request(request)
-                    .response(pkc)
-                    .build());
-            if (result.isSuccess()) {
+
+            if (userService.finishLogin(credential,username,relyingParty).isSuccess()) {
                 model.addAttribute("username", username);
                 return "welcome";
             } else {
