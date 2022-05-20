@@ -160,12 +160,16 @@ public class UserController {
 
     @PostMapping("/welcome")
     public String finishLogin(
-          @RequestBody WelcomRequest request,
+            @RequestParam String credential,
+            @RequestParam String username,
           Model model
     ) {
        ;
-        if (userService.finishLogin(request,relyingParty).isSuccess()) {
-            model.addAttribute("username", request.getUsername());
+       WelcomRequest welcomRequest=new WelcomRequest();
+       welcomRequest.setCredential(credential);
+       welcomRequest.setUsername(username);
+        if (userService.finishLogin(welcomRequest,relyingParty).isSuccess()) {
+            model.addAttribute("username", welcomRequest.getUsername());
             return "welcome";
         } else {
             return "index";
