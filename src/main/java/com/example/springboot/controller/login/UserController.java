@@ -43,26 +43,28 @@ public class UserController {
 
     //
     private final Cache<String, PublicKeyCredentialCreationOptions> registrationCache;
-    private final Cache<String,  AssertionRequest> loginCache;
+    private final Cache<String, AssertionRequest> loginCache;
 
 
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private AuthenticatorRepository authenticatorRepository;
-   public UserController(RelyingParty relyingPary) {
+
+    public UserController(RelyingParty relyingPary) {
         this.relyingParty = relyingPary;
-       this.loginCache = Caffeine.newBuilder().maximumSize(200000)
-               .expireAfterAccess(5, TimeUnit.MINUTES).build();
-       this.registrationCache = Caffeine.newBuilder().maximumSize(200000)
-               .expireAfterAccess(5, TimeUnit.MINUTES).build();
+        this.loginCache = Caffeine.newBuilder().maximumSize(200000)
+                .expireAfterAccess(5, TimeUnit.MINUTES).build();
+        this.registrationCache = Caffeine.newBuilder().maximumSize(200000)
+                .expireAfterAccess(5, TimeUnit.MINUTES).build();
     }
+
     @PostMapping("/register")
     @ResponseBody
     public String register(@RequestBody @Valid UserRegisterRequest userRegister) {
         try {
             System.out.print("fuck fuck fuck ");
-            User user=userService.register(userRegister);
+            User user = userService.register(userRegister);
 //            , session
             return newAuthRegistration(user);
         } catch (DataIntegrityViolationException e) {
@@ -70,15 +72,13 @@ public class UserController {
         }
 
 
-
-
-
     }
+
     @PostMapping("/registerauth")
     @ResponseBody
     public String newAuthRegistration(
             @RequestBody User user
-    ){
+    ) {
 //        return userService.newAuthRegistration(user,relyingParty);
         Optional<User> existingUser = userRepository.findByHandle(user.getHandle());
         if (existingUser.isPresent()) {
@@ -147,12 +147,8 @@ public class UserController {
     public String startLogin(
             @RequestParam String username
     ) {
-        AssertionRequest request = relyingParty.startAssertion(StartAssertionOptions.builder()
-                .username(username)
-                .build());
         try {
-            loginCache.put(username,request);
-            return request.toCredentialsGetJson();
+            return userService.startLogin(username, relyingParty);
         } catch (JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -163,12 +159,12 @@ public class UserController {
     public String finishLogin(
             @RequestParam String credential,
             @RequestParam String username,
-          Model model
+            Model model
     ) {
-       ;
+        ;
         try {
 
-            if (userService.finishLogin(credential,username,relyingParty).isSuccess()) {
+            if (userService.finishLogin(credential, username, relyingParty).isSuccess()) {
                 model.addAttribute("username", username);
                 return "welcome";
             } else {
@@ -181,7 +177,6 @@ public class UserController {
         }
 
     }
-
 
 
 }

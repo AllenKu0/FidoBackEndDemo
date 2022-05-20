@@ -104,16 +104,14 @@ public class UserService {
     }
 
 
-    public String startLogin(String username, RelyingParty relyingParty){
+    public String startLogin(String username, RelyingParty relyingParty) throws JsonProcessingException {
         AssertionRequest request = relyingParty.startAssertion(StartAssertionOptions.builder()
                 .username(username)
                 .build());
-        try {
+
             loginCache.put(username,request);
             return request.toCredentialsGetJson();
-        } catch (JsonProcessingException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-        }
+
     }
 
     public void finishAuth(FinishAuthRequest request, RelyingParty relyingParty) throws IOException, RegistrationFailedException {
