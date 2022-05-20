@@ -15,6 +15,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.yubico.webauthn.*;
 import com.yubico.webauthn.data.*;
+import com.yubico.webauthn.exception.AssertionFailedException;
 import com.yubico.webauthn.exception.RegistrationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -165,14 +166,24 @@ public class UserController {
           Model model
     ) {
        ;
-       WelcomRequest welcomRequest=new WelcomRequest();
-       welcomRequest.setCredential(credential);
-       welcomRequest.setUsername(username);
-        if (userService.finishLogin(welcomRequest,relyingParty).isSuccess()) {
-            model.addAttribute("username", welcomRequest.getUsername());
-            return "welcome";
-        } else {
-            return "index";
+        try {
+            PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs> pkc;
+            pkc = PublicKeyCredential.parseAssertionResponseJson(credential);
+            AssertionRequest request = (AssertionRequest)loginCache.getIfPresent(username);
+            AssertionResult result = relyingParty.finishAssertion(FinishAssertionOptions.builder()
+                    .request(request)
+                    .response(pkc)
+                    .build());
+            if (result.isSuccess()) {
+                model.addAttribute("username", username);
+                return "welcome";
+            } else {
+                return "index";
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Authentication failed", e);
+        } catch (AssertionFailedException e) {
+            throw new RuntimeException("Authentication failed", e);
         }
 
     }
