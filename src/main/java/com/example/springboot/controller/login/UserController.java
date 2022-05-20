@@ -145,10 +145,10 @@ public class UserController {
     @PostMapping("/login")
     @ResponseBody
     public String startLogin(
-            @RequestBody String username
+            @RequestParam String username
     ) {
         AssertionRequest request = relyingParty.startAssertion(StartAssertionOptions.builder()
-                .username("aaaa")
+                .username(username)
                 .build());
         try {
             loginCache.put(username,request);
