@@ -2,6 +2,7 @@ package com.example.springboot.controller;
 
 import com.example.springboot.constant.SecurityConstants;
 import com.example.springboot.entity.User;
+import com.example.springboot.request.LessonRequest;
 import com.example.springboot.request.LoginRequest;
 import com.example.springboot.response.ListLessonResponse;
 import com.example.springboot.service.LessonService;
@@ -18,6 +19,20 @@ public class LessonController {
 
     @Autowired
     LessonService lessonService;
+
+
+    @PostMapping
+    public ResponseEntity<?> postLesson(LessonRequest request){
+        try {
+            lessonService.saveLesson(request);
+            return (ResponseEntity<?>) ResponseEntity.ok();
+        }
+        catch (Exception e){
+            return new ResponseEntity<>("error"+e,HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     @GetMapping("/list")
     @ApiOperation(value = "登入")
     public ResponseEntity<ListLessonResponse> login() {

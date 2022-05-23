@@ -19,4 +19,8 @@ public class Lesson {
     @Column(name = "lessonCredit",  nullable = false)
     private Integer lesson_credit;
 
+    public Lesson(String lesson_name, Integer lesson_credit) {
+        this.lesson_name = lesson_name;
+        this.lesson_credit = lesson_credit;
+    }
 }
