@@ -21,4 +21,9 @@ public class CourseSelection {
     @ManyToOne
     @JoinColumn(name = "pk_user", referencedColumnName = "id")
     private User user;
+
+    public CourseSelection(Lesson lesson, User user) {
+        this.lesson = lesson;
+        this.user = user;
+    }
 }

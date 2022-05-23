@@ -21,16 +21,9 @@ public class LessonController {
     LessonService lessonService;
 
 
-    @PostMapping
-    public ResponseEntity<?> postLesson(LessonRequest request){
-        try {
+    @PostMapping("/lesson")
+    public void postLesson(@RequestBody LessonRequest request){
             lessonService.saveLesson(request);
-            return (ResponseEntity<?>) ResponseEntity.ok();
-        }
-        catch (Exception e){
-            return new ResponseEntity<>("error"+e,HttpStatus.BAD_REQUEST);
-        }
-
     }
 
     @GetMapping("/list")

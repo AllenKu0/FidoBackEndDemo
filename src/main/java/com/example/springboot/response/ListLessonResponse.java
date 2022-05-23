@@ -21,6 +21,18 @@ public class ListLessonResponse {
     }
 
     public static class  LessonResponse{
+        public int getLesson_index() {
+            return lesson_index;
+        }
+
+        public String getLesson_name() {
+            return lesson_name;
+        }
+
+        public Integer getLesson_credit() {
+            return lesson_credit;
+        }
+
         private int lesson_index=0;
         private String lesson_name="";
         private Integer lesson_credit=0;

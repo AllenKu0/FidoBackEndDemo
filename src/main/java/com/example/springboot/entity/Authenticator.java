@@ -17,7 +17,7 @@ import java.util.Optional;
 public class Authenticator {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column

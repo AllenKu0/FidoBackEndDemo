@@ -17,7 +17,7 @@ public class User {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "password", columnDefinition = "varchar(68)", nullable = false)
