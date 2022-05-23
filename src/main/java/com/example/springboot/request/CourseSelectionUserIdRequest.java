@@ -2,6 +2,9 @@ package com.example.springboot.request;
 
 public class CourseSelectionUserIdRequest {
 
+    public CourseSelectionUserIdRequest() {
+    }
+
     public CourseSelectionUserIdRequest(Long user_id) {
         this.user_id = user_id;
     }
