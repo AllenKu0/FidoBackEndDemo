@@ -91,6 +91,7 @@ public class UserController {
 
 //            registrationCache.setAttribute(userIdentity.getDisplayName(), registration);
             try {
+                //會進RegistrationService的getCredentialIdsForUsername
                 PublicKeyCredentialCreationOptions registration = relyingParty.startRegistration(registrationOptions);
                 this.registrationCache.put(userIdentity.getName(), registration);
                 return registration.toCredentialsCreateJson();

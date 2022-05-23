@@ -25,6 +25,7 @@ public class RegistrationService implements CredentialRepository {
     @Autowired
     private AuthenticatorRepository authRepository;
 
+    //產生框框前 會進這
     @Override
     public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String username) {
         Optional<User> user = userRepo.findByEmail(username);
@@ -54,6 +55,7 @@ public class RegistrationService implements CredentialRepository {
         return Optional.of(user.get().getEmail());
     }
 
+    //輸入完登入框框進
     @Override
     public Optional<RegisteredCredential> lookup(ByteArray credentialId, ByteArray userHandle) {
         Optional<Authenticator> auth = authRepository.findByCredentialId(credentialId);
@@ -68,6 +70,7 @@ public class RegistrationService implements CredentialRepository {
         );
     }
 
+    //輸入完框框進
     @Override
     public Set<RegisteredCredential> lookupAll(ByteArray credentialId) {
         List<Authenticator> auth = authRepository.findAllByCredentialId(credentialId);

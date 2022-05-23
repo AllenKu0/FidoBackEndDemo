@@ -85,6 +85,7 @@
                     clientExtensionResults: publicKeyCredential.getClientExtensionResults(),
                 }))
                 .then((encodedResult) => {
+                    console.log(JSON.stringify(encodedResult));
                     console.log("ddddddddddddddd");
                     const form = document.getElementById("form");
                     const formData = new FormData(form);
@@ -96,9 +97,9 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
+                            credential: JSON.stringify(encodedResult),
                             username:"aaaa",
                             credname:"aaaa",
-                            credential:encodedResult
                         })
                     })
                 })
