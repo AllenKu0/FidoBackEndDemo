@@ -7,9 +7,12 @@ import com.example.springboot.repository.CourseSelectionRepository;
 import com.example.springboot.repository.LessonRepository;
 import com.example.springboot.repository.UserRepository;
 import com.example.springboot.request.CourseSelectionRequest;
+import com.example.springboot.request.CourseSelectionUserIdRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,21 +38,29 @@ public class CourseSelectionService {
         else {
             throw new Exception("no find");
         }
-
-
     }
-//    public ListLessonResponse getAllLesson(){
-//
-//        List< ListLessonResponse.LessonResponse> lessonResponseList=new ArrayList<>();
-//        for (int i=0;i<lessonRepository.findAll().size();i++){
-//            Lesson lesson= lessonRepository.findAll().get(i);
-//            ListLessonResponse.LessonResponse response=new ListLessonResponse.LessonResponse(
-//                    i,
-//                    lesson.getLesson_name(),
-//                    lesson.getLesson_credit()
-//            );
-//            lessonResponseList.add(response);
-//        }
-//        return new ListLessonResponse(lessonResponseList);
-//    }
+    public void deleteCourse(CourseSelectionRequest courseSelectionRequest) throws Exception{
+        Optional<User> user=userRepository.findById(courseSelectionRequest.getUser_id());
+        Optional<Lesson> lesson=lessonRepository.findById(courseSelectionRequest.getLesson_id());
+        if (lesson.isPresent() && user.isPresent()){
+            Optional<CourseSelection> courseSelection=courseSelectionRespority.findCourseSelectionByUserAndLesson(user.get(),lesson.get());
+            courseSelection.ifPresent(selection -> courseSelectionRespority.delete(selection));
+        }
+        else {
+            throw new Exception("no find");
+        }
+    }
+    public List<CourseSelection> getAllLesson(CourseSelectionUserIdRequest courseSelectionUserIdRequest){
+        List<CourseSelection> courseSelections=new ArrayList<>();
+        Optional<User> user=userRepository.findById(courseSelectionUserIdRequest.getUser_id());
+        if(user.isPresent()){
+            if(courseSelectionRespority.findCourseSelectionByUser(user.get()).isPresent()){
+                for (int i=0;i<courseSelectionRespority.findCourseSelectionByUser(user.get()).get().size();i++){
+                    CourseSelection courseSelection= courseSelectionRespority.findCourseSelectionByUser(user.get()).get().get(i);
+                    courseSelections.add(courseSelection);
+                }
+            }
+        }
+        return courseSelections;
+    }
 }

@@ -2,12 +2,10 @@ package com.example.springboot.controller;
 
 import com.example.springboot.repository.CourseSelectionRepository;
 import com.example.springboot.request.CourseSelectionRequest;
+import com.example.springboot.request.CourseSelectionUserIdRequest;
 import com.example.springboot.service.CourseSelectionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/course")
@@ -23,4 +21,24 @@ public class CourseSelectionController {
            System.out.print(e);
        }
     }
+
+    @PostMapping("/delete")
+    public void courseDelete(@RequestBody CourseSelectionRequest courseSelectionRequest){
+        try {
+            courseSelectionService.deleteCourse(courseSelectionRequest);
+        }catch (Exception e){
+            System.out.print(e);
+        }
+    }
+
+    @GetMapping("/getByUser")
+    public void courseGetByUser(@RequestBody CourseSelectionUserIdRequest courseSelectionUserIdRequest){
+        System.out.print("aaaaaaa");
+        try {
+            courseSelectionService.getAllLesson(courseSelectionUserIdRequest);
+        }catch (Exception e){
+            System.out.print(e);
+        }
+    }
+
 }
