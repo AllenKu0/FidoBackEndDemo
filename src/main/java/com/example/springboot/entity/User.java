@@ -1,9 +1,11 @@
 package com.example.springboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.UserIdentity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -35,6 +37,18 @@ public class User {
     @Lob
     @Column(nullable = false, length = 64)
     private ByteArray handle;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy="user",cascade = CascadeType.ALL)
+    private Set<CourseSelection> courseSelection;
+
+    public Set<CourseSelection> getCourseSelection() {
+        return courseSelection;
+    }
+
+    public void setCourseSelection(Set<CourseSelection> courseSelection) {
+        this.courseSelection = courseSelection;
+    }
 
     public User(UserIdentity user) {
         this.handle = user.getId();

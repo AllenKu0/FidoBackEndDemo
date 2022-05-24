@@ -6,6 +6,7 @@ import com.example.springboot.request.LessonRequest;
 import com.example.springboot.request.LoginRequest;
 import com.example.springboot.response.ListLessonResponse;
 import com.example.springboot.service.LessonService;
+import com.sun.net.httpserver.Authenticator;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -36,5 +37,16 @@ public class LessonController {
         else {
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody LessonRequest lessonRequest){
+        try {
+            lessonService.deleteLesson(lessonRequest);
+            return new ResponseEntity<Authenticator.Success>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Error>(HttpStatus.CONFLICT);
+        }
+
     }
 }

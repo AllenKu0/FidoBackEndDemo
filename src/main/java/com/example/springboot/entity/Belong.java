@@ -12,21 +12,21 @@ import java.util.Set;
 public class Belong {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long belong_id;
+    private Long belongId;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pk_classromm", referencedColumnName = "class_id")
+    @JoinColumn(name = "pk_classromm", referencedColumnName = "classId")
     private ClassRoom classRoom;
 
     @OneToMany
     private Set<Teacher> teacher;
 
-    public Long getBelong_id() {
-        return belong_id;
+    public Long getBelongId() {
+        return belongId;
     }
 
-    public void setBelong_id(Long belong_id) {
-        this.belong_id = belong_id;
+    public void setBelongId(Long belongId) {
+        this.belongId = belongId;
     }
 
     public ClassRoom getClassRoom() {

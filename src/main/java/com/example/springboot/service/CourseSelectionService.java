@@ -8,6 +8,7 @@ import com.example.springboot.repository.LessonRepository;
 import com.example.springboot.repository.UserRepository;
 import com.example.springboot.request.CourseSelectionUserIdRequest;
 import com.example.springboot.request.CourseSelectionGetAllRequest;
+import com.example.springboot.response.CourseSelectionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,17 +51,17 @@ public class CourseSelectionService {
             throw new Exception("no find");
         }
     }
-    public List<CourseSelectionGetAllRequest> getAllLesson(CourseSelectionUserIdRequest courseSelectionUserIdRequest){
-        List<CourseSelectionGetAllRequest> courseSelectionGetAllRequests =new ArrayList<>();
+    public List<CourseSelectionResponse> getAllLesson(CourseSelectionUserIdRequest courseSelectionUserIdRequest){
+        List<CourseSelectionResponse> courseSelectionResponses =new ArrayList<>();
         Optional<User> user=userRepository.findById(courseSelectionUserIdRequest.getUser_id());
         if(user.isPresent()){
             if(courseSelectionRespority.findCourseSelectionByUser(user.get()).isPresent()){
                 for (int i=0;i<courseSelectionRespority.findCourseSelectionByUser(user.get()).get().size();i++){
                     CourseSelection courseSelection= courseSelectionRespority.findCourseSelectionByUser(user.get()).get().get(i);
-                    courseSelectionGetAllRequests.add(new CourseSelectionGetAllRequest(courseSelection.getChoose_id(),courseSelection.getLesson()));
+                    courseSelectionResponses.add(new CourseSelectionResponse(courseSelection.getLesson().getLessonId(),courseSelection.getLesson().getLessonName()));
                 }
             }
         }
-        return courseSelectionGetAllRequests;
+        return courseSelectionResponses;
     }
 }

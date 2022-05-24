@@ -1,54 +1,68 @@
 package com.example.springboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
 @NoArgsConstructor
 public class Lesson {
-    public Lesson(Long lesson_id) {
-        this.lesson_id = lesson_id;
+    public Lesson(Long lessonId) {
+        this.lessonId = lessonId;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long lesson_id;
+    private Long lessonId;
 
     @Column(name = "lessonName", columnDefinition = "varchar(68)", nullable = false)
-    private String lesson_name;
+    private String lessonName;
 
-    public Long getLesson_id() {
-        return lesson_id;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lesson",cascade = CascadeType.ALL)
+    private Set<CourseSelection> courseSelection;
+
+    public Long getLessonId() {
+        return lessonId;
     }
 
-    public void setLesson_id(Long lesson_id) {
-        this.lesson_id = lesson_id;
+    public void setLessonId(Long lessonId) {
+        this.lessonId = lessonId;
     }
 
-    public String getLesson_name() {
-        return lesson_name;
+    public String getLessonName() {
+        return lessonName;
     }
 
-    public void setLesson_name(String lesson_name) {
-        this.lesson_name = lesson_name;
+    public void setLessonName(String lessonName) {
+        this.lessonName = lessonName;
     }
 
-    public Integer getLesson_credit() {
-        return lesson_credit;
+    public Set<CourseSelection> getCourseSelection() {
+        return courseSelection;
     }
 
-    public void setLesson_credit(Integer lesson_credit) {
-        this.lesson_credit = lesson_credit;
+    public void setCourseSelection(Set<CourseSelection> courseSelection) {
+        this.courseSelection = courseSelection;
+    }
+
+    public Integer getLessonCredit() {
+        return lessonCredit;
+    }
+
+    public void setLessonCredit(Integer lessonCredit) {
+        this.lessonCredit = lessonCredit;
     }
 
     @Column(name = "lessonCredit",  nullable = false)
-    private Integer lesson_credit;
+    private Integer lessonCredit;
 
-    public Lesson(String lesson_name, Integer lesson_credit) {
-        this.lesson_name = lesson_name;
-        this.lesson_credit = lesson_credit;
+    public Lesson(String lessonName, Integer lessonCredit) {
+        this.lessonName = lessonName;
+        this.lessonCredit = lessonCredit;
     }
 }

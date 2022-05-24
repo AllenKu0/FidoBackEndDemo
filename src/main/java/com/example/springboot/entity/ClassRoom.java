@@ -11,17 +11,17 @@ import javax.persistence.*;
 public class ClassRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long class_id;
+    private Long classId;
 
     @Column(name = "className", columnDefinition = "varchar(68)", nullable = false)
     private String className;
 
     public Long getClassId() {
-        return class_id;
+        return classId;
     }
 
-    public void setClassId(Long class_id) {
-        this.class_id = class_id;
+    public void setClassId(Long classId) {
+        this.classId = classId;
     }
 
     public String getClassName() {

@@ -11,31 +11,40 @@ import javax.persistence.*;
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long teacher_id;
+    private Long teacherId;
 
     @Column(name = "teacherName", columnDefinition = "varchar(68)", nullable = false)
-    private String teacher_name;
+    private String teacherName;
 
     @ManyToOne
-    @JoinColumn(name="belong_id")
+    @JoinColumn(name="belongId")
     private Belong belong;
-    public Long getTeacher_id() {
-        return teacher_id;
+
+    public Long getTeacherId() {
+        return teacherId;
     }
 
-    public void setTeacher_id(Long teacher_id) {
-        this.teacher_id = teacher_id;
+    public void setTeacherId(Long teacherId) {
+        this.teacherId = teacherId;
     }
 
-    public String getTeacher_name() {
-        return teacher_name;
+    public String getTeacherName() {
+        return teacherName;
     }
 
-    public void setTeacher_name(String teacher_name) {
-        this.teacher_name = teacher_name;
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public Belong getBelong() {
+        return belong;
+    }
+
+    public void setBelong(Belong belong) {
+        this.belong = belong;
     }
 
     public Teacher(String teacher_name) {
-        this.teacher_name = teacher_name;
+        this.teacherName = teacher_name;
     }
 }

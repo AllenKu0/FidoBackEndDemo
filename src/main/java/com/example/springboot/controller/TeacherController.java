@@ -35,6 +35,6 @@ public class TeacherController {
 
     @PostMapping("/delete")
     public void deleteTeacher(@RequestBody TeacherRequest teacherRequest){
-//        teacherService.deleteTeacher(teacherRequest);
+        teacherService.deleteTeacher(teacherRequest);
     }
 }

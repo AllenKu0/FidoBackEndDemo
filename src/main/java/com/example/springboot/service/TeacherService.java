@@ -28,19 +28,19 @@ public class TeacherService {
         List<TeacherResponse> teacherResponses = new ArrayList<>();
         for (Teacher teacher : teacherRepository.findAll()) {
             TeacherResponse response = new TeacherResponse(
-                    teacher.getTeacher_id()
-                    , teacher.getTeacher_name()
+                    teacher.getTeacherId()
+                    , teacher.getTeacherName()
             );
             teacherResponses.add(response);
         }
         return teacherResponses;
     }
 
-//    public void deleteTeacher(TeacherRequest teacherRequest){
-//        Optional<Teacher> teacher = teacherRepository.findTeacherByName(teacherRequest.getTeacher_name());
-//        if(teacher.isPresent()){
-//            teacherRepository.delete(teacher.get());
-//        }
-//    }
+    public void deleteTeacher(TeacherRequest teacherRequest){
+        Optional<Teacher> teacher = teacherRepository.findTeacherByTeacherName(teacherRequest.getTeacher_name());
+        if(teacher.isPresent()){
+            teacherRepository.delete(teacher.get());
+        }
+    }
 }
 

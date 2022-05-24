@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LessonService {
@@ -28,11 +29,18 @@ public class LessonService {
             Lesson lesson= lessonRepository.findAll().get(i);
             ListLessonResponse.LessonResponse response=new ListLessonResponse.LessonResponse(
                     i,
-                   lesson.getLesson_name(),
-                    lesson.getLesson_credit()
+                   lesson.getLessonName(),
+                    lesson.getLessonCredit()
             );
             lessonResponseList.add(response);
         }
         return new ListLessonResponse(lessonResponseList);
+    }
+
+    public void deleteLesson(LessonRequest lessonRequest){
+        Optional<Lesson> lesson = lessonRepository.findByLessonName(lessonRequest.getLesson_name());
+        if (lesson.isPresent()){
+            lessonRepository.delete(lesson.get());
+        }
     }
 }
