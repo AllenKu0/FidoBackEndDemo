@@ -37,13 +37,13 @@ public class BelongController {
         }
     }
 
-//    @PostMapping("/delete")
-//    public void deleteBelong(@RequestBody BelongRequest belongRequest){
-//        try {
-//            belongService.deleteBelong(belongRequest);
-//        }catch (Exception e){
-//            System.out.print(e);
-//        }
-//    }
+    @PostMapping("/delete")
+    public void deleteBelong(@RequestBody BelongRequest belongRequest){
+        try {
+            belongService.deleteBelong(belongRequest);
+        }catch (Exception e){
+            System.out.print(e);
+        }
+    }
 }
 

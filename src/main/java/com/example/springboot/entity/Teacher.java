@@ -1,5 +1,6 @@
 package com.example.springboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,8 +17,8 @@ public class Teacher {
     @Column(name = "teacherName", columnDefinition = "varchar(68)", nullable = false)
     private String teacherName;
 
-    @ManyToOne
-    @JoinColumn(name="belongId")
+    @JsonManagedReference
+    @OneToOne(mappedBy = "teacher",cascade = CascadeType.ALL)
     private Belong belong;
 
     public Long getTeacherId() {

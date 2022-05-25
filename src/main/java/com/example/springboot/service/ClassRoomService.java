@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClassRoomService {
@@ -30,5 +31,12 @@ public class ClassRoomService {
             classRoomResponses.add(response);
         }
         return classRoomResponses;
+    }
+
+    public void deleteClassRoom(ClassRoomRequest classRoomRequest){
+        Optional<ClassRoom> classRoom = classRoomRepository.findByClassName(classRoomRequest.getClassName());
+        if(classRoom.isPresent()){
+            classRoomRepository.delete(classRoom.get());
+        }
     }
 }

@@ -1,12 +1,13 @@
 package com.example.springboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
 
-@Entity
+@Entity(name = "TrelationC")
 @Getter
 @NoArgsConstructor
 public class Belong {
@@ -14,12 +15,15 @@ public class Belong {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long belongId;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pk_classromm", referencedColumnName = "classId")
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "pk_classroom", referencedColumnName = "classId")
     private ClassRoom classRoom;
 
-    @OneToMany
-    private Set<Teacher> teacher;
+    @JsonBackReference
+    @OneToOne
+    @JoinColumn(name = "pk_teacher", referencedColumnName = "teacherId")
+    private Teacher teacher;
 
     public Long getBelongId() {
         return belongId;
@@ -37,15 +41,15 @@ public class Belong {
         this.classRoom = classRoom;
     }
 
-    public Set<Teacher> getTeacher() {
+    public Teacher getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(Set<Teacher> teacher) {
+    public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
 
-    public Belong(ClassRoom classRoom, Set<Teacher> teacher) {
+    public Belong(ClassRoom classRoom, Teacher teacher) {
         this.classRoom = classRoom;
         this.teacher = teacher;
     }

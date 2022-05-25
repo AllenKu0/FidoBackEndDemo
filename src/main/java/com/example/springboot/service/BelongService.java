@@ -39,22 +39,20 @@ public class BelongService {
     public void saveBelong(BelongPostRequest belongPostRequest){
         Optional<ClassRoom> classRoom = classRoomRepository.findById(belongPostRequest.getClassRoom_id());
         Optional<Teacher> teacher = teacherRepository.findById(belongPostRequest.getTeacher_id());
-        Set<Teacher> teachers = new HashSet<>();
-        teachers.add(teacher.get());
 
-        Belong belong = new Belong(classRoom.get(),teachers);
+        Belong belong = new Belong(classRoom.get(),teacher.get());
         belongRepository.save(belong);
 
     }
 
-//    public void deleteBelong(BelongRequest belongRequest){
-//        Optional<Teacher> teacher = teacherRepository.findById(belongRequest.getTeacher_id());
-//
-//        if(teacher.isPresent()){
-//            if(belongRepository.findClassRoomByTeacher(teacher.get()).isPresent()){
-//                Optional<Belong> belong=belongRepository.findClassRoomByTeacher(teacher.get());
-//                belong.ifPresent(selection -> belongRepository.delete(selection));
-//            }
-//        }
-//    }
+    public void deleteBelong(BelongRequest belongRequest){
+        Optional<Teacher> teacher = teacherRepository.findById(belongRequest.getTeacher_id());
+
+        if(teacher.isPresent()){
+            if(belongRepository.findClassRoomByTeacher(teacher.get()).isPresent()){
+                Optional<Belong> belong=belongRepository.findClassRoomByTeacher(teacher.get());
+                belongRepository.delete(belong.get());
+            }
+        }
+    }
 }

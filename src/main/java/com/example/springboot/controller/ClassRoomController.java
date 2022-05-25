@@ -28,4 +28,13 @@ public class ClassRoomController {
             return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/delete")
+    public void deleteClassRoom(@RequestBody ClassRoomRequest classRoomRequest){
+        try {
+            classRoomService.deleteClassRoom(classRoomRequest);
+        }catch (Exception e){
+            System.out.print(e);
+        }
+    }
 }

@@ -1,9 +1,11 @@
 package com.example.springboot.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -15,6 +17,17 @@ public class ClassRoom {
 
     @Column(name = "className", columnDefinition = "varchar(68)", nullable = false)
     private String className;
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Belong> belong;
+
+    public Set<Belong> getBelong() {
+        return belong;
+    }
+
+    public void setBelong(Set<Belong> belong) {
+        this.belong = belong;
+    }
 
     public Long getClassId() {
         return classId;
