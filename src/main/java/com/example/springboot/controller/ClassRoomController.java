@@ -33,7 +33,7 @@ public class ClassRoomController {
     }
 
     @PostMapping("/delete")
-    @ApiOperation(value = "刪除選課")
+    @ApiOperation(value = "刪除教室")
     public ResponseEntity<? extends Object> deleteClassRoom(@RequestBody ClassRoomRequest classRoomRequest){
         try {
             classRoomService.deleteClassRoom(classRoomRequest);

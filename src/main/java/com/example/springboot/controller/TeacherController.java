@@ -45,6 +45,7 @@ public class TeacherController {
     }
 
     @PostMapping("/delete")
+    @ApiOperation(value = "刪除老師")
     public ResponseEntity<?> deleteTeacher(@RequestBody TeacherRequest teacherRequest){
         try {
             teacherService.deleteTeacher(teacherRequest);

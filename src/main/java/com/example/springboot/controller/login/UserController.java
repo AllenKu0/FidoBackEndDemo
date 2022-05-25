@@ -163,6 +163,7 @@ public class UserController {
 
 
     @PostMapping("/welcome")
+    @ApiOperation(value = "完成登入，前往主頁")
     public  ResponseEntity<?> finishLogin(
             @RequestParam String credential,
             @RequestParam String username

@@ -41,6 +41,7 @@ public class LessonController {
     }
 
     @PostMapping("/delete")
+    @ApiOperation(value = "刪除課程")
     public ResponseEntity<?> delete(@RequestBody LessonRequest lessonRequest){
         try {
             lessonService.deleteLesson(lessonRequest);
