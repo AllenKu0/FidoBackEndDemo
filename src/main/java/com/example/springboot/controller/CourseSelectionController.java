@@ -4,6 +4,7 @@ import com.example.springboot.repository.CourseSelectionRepository;
 import com.example.springboot.request.CourseSelectionRequest;
 import com.example.springboot.request.CourseSelectionUserIdRequest;
 import com.example.springboot.service.CourseSelectionService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ public class CourseSelectionController {
     CourseSelectionService courseSelectionService;
 
     @PostMapping("/select")
+    @ApiOperation(value = "新增選課")
     public ResponseEntity<?> courseSelect(@RequestBody CourseSelectionRequest courseSelectionRequest){
        try {
            courseSelectionService.saveCourse(courseSelectionRequest);
@@ -27,6 +29,7 @@ public class CourseSelectionController {
     }
 
     @PostMapping("/delete")
+    @ApiOperation(value = "取消選課")
     public ResponseEntity<?> courseDelete(@RequestBody CourseSelectionRequest courseSelectionRequest){
         try {
             courseSelectionService.deleteCourse(courseSelectionRequest);
@@ -38,6 +41,7 @@ public class CourseSelectionController {
     }
 
     @GetMapping("/getByUser")
+    @ApiOperation(value = "獲取已選課程")
     public ResponseEntity<?> courseGetByUser(@RequestBody CourseSelectionUserIdRequest courseSelectionUserIdRequest){
         System.out.print("aaaaaaa");
         try {

@@ -5,6 +5,7 @@ import com.example.springboot.response.ListLessonResponse;
 import com.example.springboot.response.TeacherResponse;
 import com.example.springboot.service.TeacherService;
 import com.sun.net.httpserver.Authenticator;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class TeacherController {
     TeacherService teacherService;
 
     @GetMapping("/get")
+    @ApiOperation(value = "取得老師")
     public ResponseEntity<?> getTeacher() {
         List<TeacherResponse> response =teacherService.getAllTeacher();
         if (response.size()>0){
@@ -30,6 +32,7 @@ public class TeacherController {
     }
 
     @PostMapping("/post")
+    @ApiOperation(value = "新增老師")
     public ResponseEntity<?> postTeacher(@RequestBody TeacherRequest teacherRequest){
         try {
             teacherService.saveTeacher(teacherRequest);

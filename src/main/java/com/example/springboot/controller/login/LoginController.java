@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.SessionStatus;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,6 +28,7 @@ public class LoginController {
 
     @PostMapping("/login")
     @ApiOperation(value = "登入")
+    @ApiIgnore
     public ResponseEntity<User> login(@RequestBody LoginRequest userLogin) {
         // 用户登录认证
         User jwtUser = authService.authLogin(userLogin);
@@ -41,7 +43,8 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    @ApiOperation(value = "用户退出登录")
+    @ApiOperation(value = "用戶退出登入")
+    @ApiIgnore
     public ResponseEntity<Void> logout(HttpSession session, SessionStatus sessionStatus) {
         //讓token過期就好
         session.invalidate();

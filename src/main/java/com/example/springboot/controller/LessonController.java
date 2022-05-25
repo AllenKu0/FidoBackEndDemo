@@ -23,13 +23,14 @@ public class LessonController {
 
 
     @PostMapping("/lesson")
+    @ApiOperation(value = "新增課程")
     public void postLesson(@RequestBody LessonRequest request){
             lessonService.saveLesson(request);
     }
 
     @GetMapping("/list")
-    @ApiOperation(value = "登入")
-    public ResponseEntity<ListLessonResponse> login() {
+    @ApiOperation(value = "取得課程")
+    public ResponseEntity<ListLessonResponse> getAllLesson() {
         ListLessonResponse response=lessonService.getAllLesson();
         if (response.getLessonResponseList().size()>0){
             return new ResponseEntity<>(response, HttpStatus.OK);

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
 
@@ -29,16 +30,19 @@ public class ViewController {
     }
 
     @GetMapping("/home")
+    @ApiIgnore
     public String welcome() {
         return "home";
     }
 
     @GetMapping("/register")
+    @ApiIgnore
     public String registerUser(Model model) {
         return "register";
     }
 
     @GetMapping("/login")
+    @ApiIgnore
     public String loginPage() {
         return "login";
     }

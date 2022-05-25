@@ -17,6 +17,7 @@ import com.yubico.webauthn.*;
 import com.yubico.webauthn.data.*;
 import com.yubico.webauthn.exception.AssertionFailedException;
 import com.yubico.webauthn.exception.RegistrationFailedException;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -61,6 +62,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @ApiOperation(value = "註冊")
     @ResponseBody
     public String register(@RequestBody @Valid UserRegisterRequest userRegister) {
         try {
@@ -76,6 +78,7 @@ public class UserController {
     }
 
     @PostMapping("/registerauth")
+    @ApiOperation(value = "註冊選擇驗證方式")
     @ResponseBody
     public String newAuthRegistration(
             @RequestBody User user
@@ -105,6 +108,7 @@ public class UserController {
     }
 
     @PostMapping("/finishauth")
+    @ApiOperation(value = "驗證取得公鑰")
     @ResponseBody
     public ResponseEntity<Void> finishRegisration(
             @RequestBody FinishAuthRequest request
@@ -145,6 +149,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @ApiOperation(value = "登入")
     @ResponseBody
     public ResponseEntity<?> startLogin(
             @RequestParam String username

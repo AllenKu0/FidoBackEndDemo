@@ -2,6 +2,7 @@ package com.example.springboot.controller;
 
 import com.example.springboot.request.ClassRoomRequest;
 import com.example.springboot.service.ClassRoomService;
+import io.swagger.annotations.ApiOperation;
 import org.hibernate.annotations.GeneratorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,11 +16,13 @@ public class ClassRoomController {
     ClassRoomService classRoomService;
 
     @PostMapping("/post")
+    @ApiOperation(value = "新增教室")
     public void postClassRomm(@RequestBody ClassRoomRequest classRequest){
         classRoomService.saveClassRoom(classRequest);
     }
 
     @GetMapping("get")
+    @ApiOperation(value = "取得教室")
     public ResponseEntity<? extends Object> getClassRoom(){
         try {
             return new ResponseEntity<>(classRoomService.getAllClassRoom(), HttpStatus.OK);
@@ -30,6 +33,7 @@ public class ClassRoomController {
     }
 
     @PostMapping("/delete")
+    @ApiOperation(value = "刪除選課")
     public ResponseEntity<? extends Object> deleteClassRoom(@RequestBody ClassRoomRequest classRoomRequest){
         try {
             classRoomService.deleteClassRoom(classRoomRequest);

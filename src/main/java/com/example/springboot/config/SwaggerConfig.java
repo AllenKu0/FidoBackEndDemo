@@ -30,12 +30,12 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "To Do List 鐵人賽",
-                "第12屆iT邦幫幫忙鐵人賽 To Do List API",
+                "WebAuthen API ",
+                "相關API ",
                 "v1.0",
                 "",
-                new Contact("CaiLiWu", "",
-                        "dy5025115@gmail.com"),
+                new Contact("AllenKuo", "",
+                        "eacf2469@gmail.com"),
                 "", "", Collections.emptyList());
     }
 }

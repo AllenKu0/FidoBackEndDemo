@@ -6,6 +6,7 @@ import com.example.springboot.request.BelongPostRequest;
 import com.example.springboot.request.BelongRequest;
 import com.example.springboot.request.TeacherRequest;
 import com.example.springboot.service.BelongService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ public class BelongController {
     BelongService belongService;
 
     @GetMapping("/get")
+    @ApiOperation(value = "取得老師-教室關系表")
     public ResponseEntity<? extends Object> getClassRoomByTeacher(@RequestBody BelongRequest belongRequest){
 
         try {
@@ -29,6 +31,7 @@ public class BelongController {
     }
 
     @PostMapping("/post")
+    @ApiOperation(value = "新增老師-教室關系表")
     public ResponseEntity<? extends Object>  postBelong(@RequestBody BelongPostRequest belongPostRequest){
         try {
             belongService.saveBelong(belongPostRequest);
@@ -40,6 +43,7 @@ public class BelongController {
     }
 
     @PostMapping("/delete")
+    @ApiOperation(value = "刪除老師-教室關系表")
     public ResponseEntity<? extends Object>  deleteBelong(@RequestBody BelongRequest belongRequest){
         try {
             belongService.deleteBelong(belongRequest);
