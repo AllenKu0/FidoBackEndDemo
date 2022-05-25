@@ -4,6 +4,7 @@ import com.example.springboot.request.TeacherRequest;
 import com.example.springboot.response.ListLessonResponse;
 import com.example.springboot.response.TeacherResponse;
 import com.example.springboot.service.TeacherService;
+import com.sun.net.httpserver.Authenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +30,25 @@ public class TeacherController {
     }
 
     @PostMapping("/post")
-    public void postTeacher(@RequestBody TeacherRequest teacherRequest){
-        teacherService.saveTeacher(teacherRequest);
+    public ResponseEntity<?> postTeacher(@RequestBody TeacherRequest teacherRequest){
+        try {
+            teacherService.saveTeacher(teacherRequest);
+            return new ResponseEntity<TeacherRequest>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Error>(HttpStatus.CONFLICT);
+        }
+
+
     }
 
     @PostMapping("/delete")
-    public void deleteTeacher(@RequestBody TeacherRequest teacherRequest){
-        teacherService.deleteTeacher(teacherRequest);
+    public ResponseEntity<?> deleteTeacher(@RequestBody TeacherRequest teacherRequest){
+        try {
+            teacherService.deleteTeacher(teacherRequest);
+            return new ResponseEntity<TeacherRequest>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Error>(HttpStatus.CONFLICT);
+        }
+
     }
 }

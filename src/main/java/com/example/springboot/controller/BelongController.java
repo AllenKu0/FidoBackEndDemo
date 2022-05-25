@@ -29,20 +29,24 @@ public class BelongController {
     }
 
     @PostMapping("/post")
-    public void postBelong(@RequestBody BelongPostRequest belongPostRequest){
+    public ResponseEntity<? extends Object>  postBelong(@RequestBody BelongPostRequest belongPostRequest){
         try {
             belongService.saveBelong(belongPostRequest);
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             System.out.print(e);
+            return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/delete")
-    public void deleteBelong(@RequestBody BelongRequest belongRequest){
+    public ResponseEntity<? extends Object>  deleteBelong(@RequestBody BelongRequest belongRequest){
         try {
             belongService.deleteBelong(belongRequest);
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             System.out.print(e);
+            return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
         }
     }
 }

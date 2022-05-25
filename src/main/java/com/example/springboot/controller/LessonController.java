@@ -47,6 +47,5 @@ public class LessonController {
         }catch (Exception e){
             return new ResponseEntity<Error>(HttpStatus.CONFLICT);
         }
-
     }
 }

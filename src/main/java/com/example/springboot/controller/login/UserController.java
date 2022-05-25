@@ -20,6 +20,7 @@ import com.yubico.webauthn.exception.RegistrationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Controller
-//@RequestMapping("/api/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
@@ -105,7 +106,7 @@ public class UserController {
 
     @PostMapping("/finishauth")
     @ResponseBody
-    public ModelAndView finishRegisration(
+    public ResponseEntity<Void> finishRegisration(
             @RequestBody FinishAuthRequest request
     ) {
         try {
@@ -131,7 +132,7 @@ public class UserController {
 
 
             }
-            return new ModelAndView("redirect:/login", HttpStatus.SEE_OTHER);
+            return ResponseEntity.ok().build();
         } catch (RegistrationFailedException e) {
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Registration failed.", e);
         } catch (IOException e) {
@@ -145,11 +146,11 @@ public class UserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public String startLogin(
+    public ResponseEntity<?> startLogin(
             @RequestParam String username
     ) {
         try {
-            return userService.startLogin(username, relyingParty);
+            return new ResponseEntity<>(userService.startLogin(username, relyingParty),HttpStatus.OK);
         } catch (JsonProcessingException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -157,27 +158,20 @@ public class UserController {
 
 
     @PostMapping("/welcome")
-    public String finishLogin(
+    public  ResponseEntity<?> finishLogin(
             @RequestParam String credential,
-            @RequestParam String username,
-            Model model
+            @RequestParam String username
     ) {
-        ;
         try {
-
             if (userService.finishLogin(credential, username, relyingParty).isSuccess()) {
-                model.addAttribute("username", username);
-                return "welcome";
+                return new ResponseEntity<>(userService.startLogin(username, relyingParty),HttpStatus.OK);
             } else {
-                return "index";
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         } catch (IOException e) {
             throw new RuntimeException("Authentication failed", e);
         } catch (AssertionFailedException e) {
             throw new RuntimeException("Authentication failed", e);
         }
-
     }
-
-
 }

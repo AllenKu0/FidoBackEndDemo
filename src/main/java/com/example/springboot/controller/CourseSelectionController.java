@@ -16,20 +16,24 @@ public class CourseSelectionController {
     CourseSelectionService courseSelectionService;
 
     @PostMapping("/select")
-    public void courseSelect(@RequestBody CourseSelectionRequest courseSelectionRequest){
+    public ResponseEntity<?> courseSelect(@RequestBody CourseSelectionRequest courseSelectionRequest){
        try {
            courseSelectionService.saveCourse(courseSelectionRequest);
+           return new ResponseEntity<>(HttpStatus.OK);
        }catch (Exception e){
            System.out.print(e);
+           return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
        }
     }
 
     @PostMapping("/delete")
-    public void courseDelete(@RequestBody CourseSelectionRequest courseSelectionRequest){
+    public ResponseEntity<?> courseDelete(@RequestBody CourseSelectionRequest courseSelectionRequest){
         try {
             courseSelectionService.deleteCourse(courseSelectionRequest);
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             System.out.print(e);
+            return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
         }
     }
 
