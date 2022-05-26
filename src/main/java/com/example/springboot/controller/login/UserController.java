@@ -111,10 +111,11 @@ public class UserController {
         try {
 //            userService.finishAuth(request, relyingParty);
             Optional<User> user = findByEmail(request.getUsername());
+              System.out.println("finishauth user have value ");
             if (user.isPresent()) {
                 PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getEmail());
                 this.registrationCache.invalidate(user.get().getEmail());
-
+                System.out.println("finishauth user registrationCache.invalidate ");
                 if (requestOptions != null) {
                     PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
                             PublicKeyCredential.parseRegistrationResponseJson(request.getCredential());
@@ -122,10 +123,13 @@ public class UserController {
                             .request(requestOptions)
                             .response(pkc)
                             .build();
+                    System.out.println("finishauth user FinishRegistrationOptions ");
                     RegistrationResult result = relyingParty.finishRegistration(options);
                     Authenticator savedAuth = new Authenticator(result, pkc.getResponse(), user.get(), request.getCredname());
+                    System.out.println("finishauth user authenticatorRepository ");
                     authenticatorRepository.save(savedAuth);
                 } else {
+                        System.out.println("finishauth user ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR ");
                     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Cached request expired. Try to register again!");
                 }
 
@@ -133,8 +137,10 @@ public class UserController {
             }
             return ResponseEntity.ok().build();
         } catch (RegistrationFailedException e) {
+            System.out.println("finishauth user RegistrationFailedException ");
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Registration failed.", e);
         } catch (IOException e) {
+               System.out.println("finishauth user HttpStatus.BAD_REQUEST ");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to save credenital, please try again!", e);
         }
     }
