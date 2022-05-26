@@ -110,7 +110,7 @@ public class UserController {
     ) {
         try {
 //            userService.finishAuth(request, relyingParty);
-            Optional<User> user = findByEmail(request.getUsername());
+            Optional<User> user = findByUserName(request.getUsername());
             if (user.isPresent()) {
                 PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getUserName());
                 this.registrationCache.invalidate(user.get().getUserName());
@@ -139,7 +139,7 @@ public class UserController {
         }
     }
 
-    public Optional<User> findByEmail(String userName) {
+    public Optional<User> findByUserName(String userName) {
         return userRepository.findByUserName(userName);
     }
 
@@ -156,6 +156,14 @@ public class UserController {
         }
     }
 
+    @GetMapping("/get")
+    public ResponseEntity<?> getAllUser() {
+        try {
+            return new ResponseEntity<>(userService.findAllUser(),HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
     @PostMapping("delete")
     @ApiOperation(value = "刪除使用者")
     @ResponseBody
