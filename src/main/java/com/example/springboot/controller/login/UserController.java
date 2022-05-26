@@ -98,7 +98,7 @@ public class UserController {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing JSON.", e);
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmail() + " does not exist. Please register.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getUserName() + " does not exist. Please register.");
         }
     }
 
@@ -112,8 +112,8 @@ public class UserController {
 //            userService.finishAuth(request, relyingParty);
             Optional<User> user = findByEmail(request.getUsername());
             if (user.isPresent()) {
-                PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getEmail());
-                this.registrationCache.invalidate(user.get().getEmail());
+                PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getUserName());
+                this.registrationCache.invalidate(user.get().getUserName());
 
                 if (requestOptions != null) {
                     PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
@@ -140,7 +140,7 @@ public class UserController {
     }
 
     public Optional<User> findByEmail(String userName) {
-        return userRepository.findByEmail(userName);
+        return userRepository.findByUserName(userName);
     }
 
     @PostMapping("/login")
