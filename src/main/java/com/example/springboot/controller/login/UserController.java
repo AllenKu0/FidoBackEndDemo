@@ -68,18 +68,9 @@ public class UserController {
         } catch (DataIntegrityViolationException e) {
             throw new AlreadyExistsException("Save failed, the user name already exist.");
         }
-    }
-    @GetMapping("/get")
-    @ApiOperation(value = "取得所有使用者")
-    @ResponseBody
-    public ResponseEntity<?> getUser() {
-        try {
-            return new ResponseEntity<>(userService.findAllUser(),HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
 
+
+    }
 
     @PostMapping("/registerauth")
     @ApiOperation(value = "註冊選擇驗證方式")
@@ -107,7 +98,7 @@ public class UserController {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing JSON.", e);
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getUserName() + " does not exist. Please register.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmail() + " does not exist. Please register.");
         }
     }
 
@@ -121,8 +112,8 @@ public class UserController {
 //            userService.finishAuth(request, relyingParty);
             Optional<User> user = findByEmail(request.getUsername());
             if (user.isPresent()) {
-                PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getUserName());
-                this.registrationCache.invalidate(user.get().getUserName());
+                PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getEmail());
+                this.registrationCache.invalidate(user.get().getEmail());
 
                 if (requestOptions != null) {
                     PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
@@ -149,7 +140,7 @@ public class UserController {
     }
 
     public Optional<User> findByEmail(String userName) {
-        return userRepository.findByUserName(userName);
+        return userRepository.findByEmail(userName);
     }
 
     @PostMapping("/login")
@@ -165,7 +156,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/delete")
+    @PostMapping("delete")
     @ApiOperation(value = "刪除使用者")
     @ResponseBody
     public ResponseEntity<?> deleteUser(
