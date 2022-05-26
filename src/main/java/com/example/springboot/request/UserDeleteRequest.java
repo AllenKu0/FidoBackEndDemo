@@ -12,11 +12,11 @@ public class UserDeleteRequest {
         this.id = id;
     }
 
-    public String getName() {
+    public String getDisplayName() {
         return displayName;
     }
 
-    public void setName(String name) {
-        this.displayName = name;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }

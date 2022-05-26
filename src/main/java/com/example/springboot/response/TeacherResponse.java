@@ -10,6 +10,16 @@ public class TeacherResponse {
 
     private String teacher_name;
 
+    private String classRoomName;
+
+    public String getClassRoomName() {
+        return classRoomName;
+    }
+
+    public void setClassRoomName(String classRoomName) {
+        this.classRoomName = classRoomName;
+    }
+
     public Long getTeacher_id() {
         return teacher_id;
     }
@@ -26,8 +36,9 @@ public class TeacherResponse {
         this.teacher_name = teacher_name;
     }
 
-    public TeacherResponse(Long teacher_id, String teacher_name) {
+    public TeacherResponse(Long teacher_id, String teacher_name, String classRoomName) {
         this.teacher_id = teacher_id;
         this.teacher_name = teacher_name;
+        this.classRoomName = classRoomName;
     }
 }

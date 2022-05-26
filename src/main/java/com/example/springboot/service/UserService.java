@@ -124,7 +124,7 @@ public class UserService {
     }
 
     public void deleteUser(UserDeleteRequest userRequest){
-        Optional<User> user = userRepository.findByDisplayName(userRequest.getName());
+        Optional<User> user = userRepository.findByDisplayName(userRequest.getDisplayName());
         if(user.isPresent()){
             userRepository.delete(user.get());
         }

@@ -1,8 +1,10 @@
 package com.example.springboot.service;
 
 import com.example.springboot.entity.Lesson;
+import com.example.springboot.entity.Teach;
 import com.example.springboot.entity.Teacher;
 import com.example.springboot.repository.LessonRepository;
+import com.example.springboot.repository.TeachRepository;
 import com.example.springboot.repository.TeacherRepository;
 import com.example.springboot.request.TeacherRequest;
 import com.example.springboot.response.ListLessonResponse;
@@ -19,6 +21,9 @@ public class TeacherService {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    @Autowired
+    private TeachRepository teachRepository;
+
     public void saveTeacher(TeacherRequest teacherRequest) {
         Teacher teacher = new Teacher(teacherRequest.getTeacher_name());
         teacherRepository.save(teacher);
@@ -27,11 +32,22 @@ public class TeacherService {
     public List<TeacherResponse> getAllTeacher() {
         List<TeacherResponse> teacherResponses = new ArrayList<>();
         for (Teacher teacher : teacherRepository.findAll()) {
-            TeacherResponse response = new TeacherResponse(
-                    teacher.getTeacherId()
-                    , teacher.getTeacherName()
-            );
-            teacherResponses.add(response);
+            Optional<Teach> teach = teachRepository.findTeachByTeacher(teacher);
+            if(teach.isPresent()){
+                TeacherResponse response = new TeacherResponse(
+                        teacher.getTeacherId()
+                        , teacher.getTeacherName()
+                        , teach.get().getLesson().getLessonName()
+                );
+                teacherResponses.add(response);
+            }else{
+                TeacherResponse response = new TeacherResponse(
+                        teacher.getTeacherId()
+                        , teacher.getTeacherName()
+                        ,"未分派"
+                );
+                teacherResponses.add(response);
+            }
         }
         return teacherResponses;
     }
