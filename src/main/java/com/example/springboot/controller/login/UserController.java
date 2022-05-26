@@ -5,10 +5,7 @@ import com.example.springboot.entity.User;
 import com.example.springboot.exception.AlreadyExistsException;
 import com.example.springboot.repository.AuthenticatorRepository;
 import com.example.springboot.repository.UserRepository;
-import com.example.springboot.request.FinishAuthRequest;
-import com.example.springboot.request.StartLoginRequest;
-import com.example.springboot.request.UserRegisterRequest;
-import com.example.springboot.request.WelcomRequest;
+import com.example.springboot.request.*;
 import com.example.springboot.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -23,10 +20,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -160,6 +155,21 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+
+    @PostMapping("delete")
+    @ApiOperation(value = "刪除使用者")
+    @ResponseBody
+    public ResponseEntity<?> deleteUser(
+            @RequestBody UserDeleteRequest userDeleteRequest
+    ) {
+        try {
+            userService.deleteUser(userDeleteRequest);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 
     @PostMapping("/welcome")

@@ -5,9 +5,7 @@ import com.example.springboot.entity.User;
 import com.example.springboot.exception.AlreadyExistsException;
 import com.example.springboot.repository.AuthenticatorRepository;
 import com.example.springboot.repository.UserRepository;
-import com.example.springboot.request.FinishAuthRequest;
-import com.example.springboot.request.UserRegisterRequest;
-import com.example.springboot.request.WelcomRequest;
+import com.example.springboot.request.*;
 import com.example.springboot.utitlity.UserMapper;
 import com.example.springboot.utitlity.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -112,6 +110,13 @@ public class UserService {
             loginCache.put(username,request);
             return request.toCredentialsGetJson();
 
+    }
+
+    public void deleteUser(UserDeleteRequest userRequest){
+        Optional<User> user = userRepository.findByDisplayName(userRequest.getName());
+        if(user.isPresent()){
+            userRepository.delete(user.get());
+        }
     }
 
     public void finishAuth(FinishAuthRequest request, RelyingParty relyingParty) throws IOException, RegistrationFailedException {
