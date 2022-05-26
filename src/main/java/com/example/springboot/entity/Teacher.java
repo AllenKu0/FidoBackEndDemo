@@ -22,7 +22,7 @@ public class Teacher {
     private Belong belong;
 
 
-    @OneToOne(mappedBy = "teacher",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "teacher",cascade = CascadeType.ALL,orphanRemoval=true)
     private Teach teach;
 
     public Teach getTeach() {
