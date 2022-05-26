@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Controller
+@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/api/users")
 public class UserController {
 
@@ -67,8 +68,6 @@ public class UserController {
         } catch (DataIntegrityViolationException e) {
             throw new AlreadyExistsException("Save failed, the user name already exist.");
         }
-
-
     }
 
     @PostMapping("/registerauth")
