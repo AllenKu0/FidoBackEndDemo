@@ -26,6 +26,17 @@ public class Lesson {
     @OneToMany(mappedBy = "lesson",cascade = CascadeType.ALL)
     private Set<CourseSelection> courseSelection;
 
+    @OneToOne(mappedBy = "lesson",cascade = CascadeType.ALL)
+    private Teach teach;
+
+    public Teach getTeach() {
+        return teach;
+    }
+
+    public void setTeach(Teach teach) {
+        this.teach = teach;
+    }
+
     public Long getLessonId() {
         return lessonId;
     }

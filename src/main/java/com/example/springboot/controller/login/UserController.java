@@ -61,7 +61,6 @@ public class UserController {
     @ResponseBody
     public String register(@RequestBody @Valid UserRegisterRequest userRegister) {
         try {
-            System.out.print("fuck fuck fuck ");
             User user = userService.register(userRegister);
 //            , session
             return newAuthRegistration(user);
@@ -128,8 +127,6 @@ public class UserController {
                 } else {
                     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Cached request expired. Try to register again!");
                 }
-
-
             }
             return ResponseEntity.ok().build();
         } catch (RegistrationFailedException e) {

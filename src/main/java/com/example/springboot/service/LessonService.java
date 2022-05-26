@@ -1,8 +1,9 @@
 package com.example.springboot.service;
 
 import com.example.springboot.entity.Lesson;
+import com.example.springboot.entity.Teach;
 import com.example.springboot.repository.LessonRepository;
-import com.example.springboot.repository.UserRepository;
+import com.example.springboot.repository.TeachRepository;
 import com.example.springboot.request.LessonRequest;
 import com.example.springboot.response.ListLessonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class LessonService {
     @Autowired
     private LessonRepository lessonRepository;
 
+    @Autowired
+    private TeachRepository teachRepository;
+
     public void saveLesson(LessonRequest lessonRequest){
         Lesson lesson=new Lesson(lessonRequest.getLesson_name(),lessonRequest.getLesson_credit());
         lessonRepository.save(lesson);
@@ -27,12 +31,24 @@ public class LessonService {
         List< ListLessonResponse.LessonResponse> lessonResponseList=new ArrayList<>();
         for (int i=0;i<lessonRepository.findAll().size();i++){
             Lesson lesson= lessonRepository.findAll().get(i);
-            ListLessonResponse.LessonResponse response=new ListLessonResponse.LessonResponse(
-                    i,
-                   lesson.getLessonName(),
-                    lesson.getLessonCredit()
-            );
-            lessonResponseList.add(response);
+            Optional<Teach> teach = teachRepository.findTeachByLesson(lesson);
+            if(teach.isPresent()){
+                ListLessonResponse.LessonResponse response=new ListLessonResponse.LessonResponse(
+                        i,
+                        lesson.getLessonName(),
+                        lesson.getLessonCredit(),
+                        teach.get().getTeacher().getTeacherName()
+                );
+                lessonResponseList.add(response);
+            }else {
+                ListLessonResponse.LessonResponse response = new ListLessonResponse.LessonResponse(
+                        i,
+                        lesson.getLessonName(),
+                        lesson.getLessonCredit(),
+                        "待聘"
+                );
+                lessonResponseList.add(response);
+            }
         }
         return new ListLessonResponse(lessonResponseList);
     }

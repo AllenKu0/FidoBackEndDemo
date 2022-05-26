@@ -21,6 +21,18 @@ public class Teacher {
     @OneToOne(mappedBy = "teacher",cascade = CascadeType.ALL)
     private Belong belong;
 
+
+    @OneToOne(mappedBy = "teacher",cascade = CascadeType.ALL)
+    private Teach teach;
+
+    public Teach getTeach() {
+        return teach;
+    }
+
+    public void setTeach(Teach teach) {
+        this.teach = teach;
+    }
+
     public Long getTeacherId() {
         return teacherId;
     }

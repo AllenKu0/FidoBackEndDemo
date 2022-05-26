@@ -40,8 +40,6 @@ public class TeacherController {
         }catch (Exception e){
             return new ResponseEntity<Error>(HttpStatus.CONFLICT);
         }
-
-
     }
 
     @PostMapping("/delete")
@@ -53,6 +51,5 @@ public class TeacherController {
         }catch (Exception e){
             return new ResponseEntity<Error>(HttpStatus.CONFLICT);
         }
-
     }
 }
