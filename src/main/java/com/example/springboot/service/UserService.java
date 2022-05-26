@@ -6,6 +6,7 @@ import com.example.springboot.exception.AlreadyExistsException;
 import com.example.springboot.repository.AuthenticatorRepository;
 import com.example.springboot.repository.UserRepository;
 import com.example.springboot.request.*;
+import com.example.springboot.response.UserResponse;
 import com.example.springboot.utitlity.UserMapper;
 import com.example.springboot.utitlity.Utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +25,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -53,7 +56,7 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public User register(UserRegisterRequest dto) {
-        Optional<User> userOptional = findByEmail(dto.getUsername());
+        Optional<User> userOptional = findByUserName(dto.getUsername());
         if (userOptional.isPresent()) {
             throw new AlreadyExistsException("Save failed, the user name already exist.");
         }
@@ -71,11 +74,19 @@ public class UserService {
 
     }
 
-    public Optional<User> findByEmail(String userName) {
-        return userRepository.findByEmail(userName);
+    public Optional<User> findByUserName(String userName) {
+        return userRepository.findByUserName(userName);
     }
 
-
+    public List<UserResponse> findAllUser(){
+        List<User> users = userRepository.findAll();
+        List<UserResponse> userResponses = new ArrayList<>();
+        for(User user:users){
+            UserResponse userResponse = new UserResponse(user.getId(),user.getUserName(),user.getDisplayName());
+            userResponses.add(userResponse);
+        }
+        return userResponses;
+    }
     public String newAuthRegistration(
             User user,
             RelyingParty relyingParty) {
@@ -97,7 +108,7 @@ public class UserService {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing JSON.", e);
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmail() + " does not exist. Please register.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getUserName() + " does not exist. Please register.");
         }
     }
 
@@ -120,7 +131,7 @@ public class UserService {
     }
 
     public void finishAuth(FinishAuthRequest request, RelyingParty relyingParty) throws IOException, RegistrationFailedException {
-        Optional<User> user = findByEmail(request.getUsername());
+        Optional<User> user = findByUserName(request.getUsername());
         if (user.isPresent()) {
             PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getHandle());
             this.registrationCache.invalidate(user.get().getHandle());

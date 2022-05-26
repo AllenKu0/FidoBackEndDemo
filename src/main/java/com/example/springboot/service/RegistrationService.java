@@ -28,7 +28,7 @@ public class RegistrationService implements CredentialRepository {
     //產生框框前 會進這
     @Override
     public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String username) {
-        Optional<User> user = userRepo.findByEmail(username);
+        Optional<User> user = userRepo.findByUserName(username);
         if (user.isPresent()){
             List<Authenticator> auth = authRepository.findAllByUser(user.get());
             return auth.stream()
@@ -45,14 +45,14 @@ public class RegistrationService implements CredentialRepository {
 
     @Override
     public Optional<ByteArray> getUserHandleForUsername(String username) {
-        Optional<User>  user = userRepo.findByEmail(username);
+        Optional<User>  user = userRepo.findByUserName(username);
         return Optional.of(user.get().getHandle());
     }
 
     @Override
     public Optional<String> getUsernameForUserHandle(ByteArray userHandle) {
         Optional<User>  user = userRepo.findByHandle(userHandle);
-        return Optional.of(user.get().getEmail());
+        return Optional.of(user.get().getUserName());
     }
 
     //輸入完登入框框進

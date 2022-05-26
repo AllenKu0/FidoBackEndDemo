@@ -33,7 +33,7 @@ public class LoginService {
 
         // 根据登录名获取用户信息
         //Optional 类是一个可以为null的容器对象。如果值存在则isPresent()方法会返回true，调用get()方法会返回该对象。
-        Optional<User> userOptional = userService.findByEmail(email);
+        Optional<User> userOptional = userService.findByUserName(email);
         if (!userOptional.isPresent()) {
             throw new UsernameNotFoundException("User not found with userName: " + email);
         }
@@ -58,7 +58,7 @@ public class LoginService {
 //            userDTO.setEmail(user.getEmail());
 //            userDTO.setRoles(roles);
 //
-            user.setEmail(email);
+            user.setUserName(email);
             user.setToken(token);
 
 

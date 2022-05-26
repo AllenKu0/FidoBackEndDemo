@@ -25,8 +25,8 @@ public class User {
     @Column(name = "password", columnDefinition = "varchar(68)", nullable = false)
     private String password;
 
-    @Column(name = "email", columnDefinition = "varchar(40)", nullable = false)
-    private String email;
+    @Column(name = "userName", columnDefinition = "varchar(40)", nullable = false)
+    private String userName;
 
     @Column(name = "token")
     private String token;
@@ -52,13 +52,13 @@ public class User {
 
     public User(UserIdentity user) {
         this.handle = user.getId();
-        this.email = user.getName();
+        this.userName = user.getName();
         this.displayName = user.getDisplayName();
     }
 
     public UserIdentity toUserIdentity() {
         return UserIdentity.builder()
-                .name(getEmail())
+                .name(getUserName())
                 .displayName(getDisplayName())
                 .id(getHandle())
                 .build();
@@ -98,12 +98,12 @@ public class User {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getToken() {
