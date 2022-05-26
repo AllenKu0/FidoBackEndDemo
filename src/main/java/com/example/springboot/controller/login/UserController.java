@@ -110,10 +110,11 @@ public class UserController {
         try {
 //            userService.finishAuth(request, relyingParty);
             Optional<User> user = findByUserName(request.getUsername());
+            System.out.println("finishRegisration 0000");
             if (user.isPresent()) {
                 PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getUserName());
                 this.registrationCache.invalidate(user.get().getUserName());
-
+                System.out.println("finishRegisration 1111");
                 if (requestOptions != null) {
                     PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
                             PublicKeyCredential.parseRegistrationResponseJson(request.getCredential());
@@ -121,17 +122,23 @@ public class UserController {
                             .request(requestOptions)
                             .response(pkc)
                             .build();
+                    System.out.println("finishRegisration 2222");
                     RegistrationResult result = relyingParty.finishRegistration(options);
+                    System.out.println("finishRegisration 33333");
                     Authenticator savedAuth = new Authenticator(result, pkc.getResponse(), user.get(), request.getCredname());
+                    System.out.println("finishRegisration 44444");
                     authenticatorRepository.save(savedAuth);
                 } else {
+                    System.out.println("finishRegisration 5555");
                     throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Cached request expired. Try to register again!");
                 }
             }
             return ResponseEntity.ok().build();
         } catch (RegistrationFailedException e) {
+            System.out.println("finishRegisration 6666"+e);
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Registration failed.", e);
         } catch (IOException e) {
+            System.out.println("finishRegisration 7777"+e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to save credenital, please try again!", e);
         }
     }
