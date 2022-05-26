@@ -137,10 +137,10 @@ public class UserController {
             }
             return ResponseEntity.ok().build();
         } catch (RegistrationFailedException e) {
-            System.out.println("finishauth user RegistrationFailedException ");
+            System.out.println("finishauth user RegistrationFailedException "+e);
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Registration failed.", e);
         } catch (IOException e) {
-               System.out.println("finishauth user HttpStatus.BAD_REQUEST ");
+               System.out.println("finishauth user HttpStatus.BAD_REQUEST "+e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to save credenital, please try again!", e);
         }
     }
