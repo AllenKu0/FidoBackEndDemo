@@ -31,13 +31,21 @@ public class TeacherService {
 
     public List<TeacherResponse> getAllTeacher() {
         List<TeacherResponse> teacherResponses = new ArrayList<>();
+        String className = "";
         for (Teacher teacher : teacherRepository.findAll()) {
             Optional<Teach> teach = teachRepository.findTeachByTeacher(teacher);
+
+            if(teacher.getBelong() != null){
+                className = teacher.getBelong().getClassRoom().getClassName();
+            }else{
+                className = "未指定";
+            }
             if(teach.isPresent()){
                 TeacherResponse response = new TeacherResponse(
                         teacher.getTeacherId()
                         , teacher.getTeacherName()
                         , teach.get().getLesson().getLessonName()
+                        , className
                 );
                 teacherResponses.add(response);
             }else{
@@ -45,6 +53,7 @@ public class TeacherService {
                         teacher.getTeacherId()
                         , teacher.getTeacherName()
                         ,"未分派"
+                        , className
                 );
                 teacherResponses.add(response);
             }

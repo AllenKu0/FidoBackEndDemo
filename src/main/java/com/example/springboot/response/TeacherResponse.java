@@ -6,11 +6,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 public class TeacherResponse {
-    private Long teacher_id;
+    private Long teacherId;
 
-    private String teacher_name;
-
+    private String teacherName;
+    private String LessonName;
     private String classRoomName;
+
+    public Long getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Long teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public String getLessonName() {
+        return LessonName;
+    }
+
+    public void setLessonName(String lessonName) {
+        LessonName = lessonName;
+    }
 
     public String getClassRoomName() {
         return classRoomName;
@@ -20,25 +44,10 @@ public class TeacherResponse {
         this.classRoomName = classRoomName;
     }
 
-    public Long getTeacher_id() {
-        return teacher_id;
-    }
-
-    public void setTeacher_id(Long teacher_id) {
-        this.teacher_id = teacher_id;
-    }
-
-    public String getTeacher_name() {
-        return teacher_name;
-    }
-
-    public void setTeacher_name(String teacher_name) {
-        this.teacher_name = teacher_name;
-    }
-
-    public TeacherResponse(Long teacher_id, String teacher_name, String classRoomName) {
-        this.teacher_id = teacher_id;
-        this.teacher_name = teacher_name;
+    public TeacherResponse(Long teacherId, String teacherName, String lessonName, String classRoomName) {
+        this.teacherId = teacherId;
+        this.teacherName = teacherName;
+        LessonName = lessonName;
         this.classRoomName = classRoomName;
     }
 }
