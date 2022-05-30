@@ -3,6 +3,8 @@ package com.example.springboot.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -18,11 +20,13 @@ public class Belong {
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "pk_classroom", referencedColumnName = "classId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ClassRoom classRoom;
 
     @JsonBackReference
     @OneToOne
     @JoinColumn(name = "pk_teacher", referencedColumnName = "teacherId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Teacher teacher;
 
     public Long getBelongId() {
