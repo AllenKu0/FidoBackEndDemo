@@ -11,7 +11,7 @@ public class CorsFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) res;
-        response.setHeader("Access-Control-Allow-Origin","http://localhost:8080,http://123.241.245.130:8080");
+        response.setHeader("Access-Control-Allow-Origin","http://localhost:8080,http://123.241.245.130:8080/");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT");
         response.setHeader("Access-Control-Max-Age", "3600");
