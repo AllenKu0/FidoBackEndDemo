@@ -9,7 +9,7 @@ import java.io.IOException;
 @WebFilter(filterName = "CorsFilter ")
 @Configuration
 public class CorsFilter implements Filter {
-    private static final String URL = "http://localhost:8080,"; // URL
+    private static final String URL = "http://localhost:8080"; // URL
     private static final String OTHER_URL = "http://123.241.245.130:8080"; // OTHER URL
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
