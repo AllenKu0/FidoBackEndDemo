@@ -41,7 +41,7 @@ public class CourseSelectionController {
         }
     }
 
-    @GetMapping("/getByUser")
+    @PostMapping("/getByUser")
     @ApiOperation(value = "獲取已選課程")
     public ResponseEntity<?> courseGetByUser(@RequestBody CourseSelectionUserIdRequest courseSelectionUserIdRequest){
         System.out.print("aaaaaaa");
