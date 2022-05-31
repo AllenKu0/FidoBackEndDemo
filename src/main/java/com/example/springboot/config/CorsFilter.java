@@ -20,7 +20,12 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String requestOrigin = request.getHeader("Origin");
         System.out.println("Cors : " + requestOrigin);
-        response.addHeader("Access-Control-Allow-Origin", requestOrigin);
+        if (requestOrigin.equals(URL)){
+            response.addHeader("Access-Control-Allow-Origin", requestOrigin);
+        }
+        else {
+            response.addHeader("Access-Control-Allow-Origin", "http://123.241.245.130:8080");
+        }
 //        response.setHeader("Access-Control-Allow-Origin","http://localhost:8080,http://123.241.245.130:8080/");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT");
