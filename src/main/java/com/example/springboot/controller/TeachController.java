@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:8080","http://123.241.245.130:8080/"})
+@CrossOrigin(origins = {"http://localhost:8080","http://123.241.245.130:8080"})
 public class TeachController {
 
     @Autowired
