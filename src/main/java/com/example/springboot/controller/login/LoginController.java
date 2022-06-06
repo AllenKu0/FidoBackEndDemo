@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = {"http://localhost:8080","http://123.241.245.130:8080"})
+@CrossOrigin(origins = {"http://localhost:8080","http://123.241.245.130:8080","http://192.168.68.102:8080"})
 @Api(tags = "Auth")
 public class LoginController {
     @Autowired

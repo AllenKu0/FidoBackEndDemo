@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Controller
-@CrossOrigin(origins = {"http://localhost:8080","http://123.241.245.130:8080"})
+@CrossOrigin(origins = {"http://localhost:8080","http://123.241.245.130:8080","http://192.168.68.102:8080"})
 @RequestMapping("/api/users")
 public class UserController {
 

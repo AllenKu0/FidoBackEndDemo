@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:8080","http://123.241.245.130:8080"})
+@CrossOrigin(origins = {"http://localhost:8080","http://123.241.245.130:8080","http://192.168.68.102:8080"})
 @RequestMapping("/api/course")
 public class CourseSelectionController {
     @Autowired
