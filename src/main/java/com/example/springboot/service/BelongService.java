@@ -3,9 +3,11 @@ package com.example.springboot.service;
 import com.example.springboot.entity.*;
 import com.example.springboot.repository.BelongRepository;
 import com.example.springboot.repository.ClassRoomRepository;
+import com.example.springboot.repository.OfficeRepository;
 import com.example.springboot.repository.TeacherRepository;
 import com.example.springboot.request.*;
 import com.example.springboot.response.ClassRoomResponse;
+import com.example.springboot.response.OfficeResponse;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,26 +23,25 @@ public class BelongService {
     TeacherRepository teacherRepository;
 
     @Autowired
-    ClassRoomRepository classRoomRepository;
+    OfficeRepository officeRepository;
 
-    public ClassRoomResponse getClassRoomByTeacherId(BelongRequest belongRequest){
-        ClassRoomResponse classroomRequests = null;
-        Optional<Teacher> teacher = teacherRepository.findById(belongRequest.getTeacher_id());
-
+    public OfficeResponse getClassRoomByTeacherId(String teacherName){
+        OfficeResponse officeResponse = null;
+        Optional<Teacher> teacher = teacherRepository.findTeacherByTeacherName(teacherName);
         if(teacher.isPresent()){
             if(belongRepository.findClassRoomByTeacher(teacher.get()).isPresent()){
-                ClassRoom classRoom = belongRepository.findClassRoomByTeacher(teacher.get()).get().getClassRoom();
-                classroomRequests = new ClassRoomResponse(classRoom.getClassId(),classRoom.getClassName());
+                Office office = belongRepository.findClassRoomByTeacher(teacher.get()).get().getOffice();
+                officeResponse = new OfficeResponse(office.getOfficeId(),office.getOfficeName(),office.getOfficePhoneNumber());
             }
         }
-        return classroomRequests;
+        return officeResponse;
     }
 
     public void saveBelong(BelongPostRequest belongPostRequest){
-        Optional<ClassRoom> classRoom = classRoomRepository.findById(belongPostRequest.getClassRoom_id());
+        Optional<Office> office = officeRepository.findById(belongPostRequest.getOffice_id());
         Optional<Teacher> teacher = teacherRepository.findById(belongPostRequest.getTeacher_id());
 
-        Belong belong = new Belong(classRoom.get(),teacher.get());
+        Belong belong = new Belong(office.get(),teacher.get());
         belongRepository.save(belong);
 
     }

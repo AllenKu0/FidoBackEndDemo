@@ -15,8 +15,13 @@ public class ClassRoomController {
     ClassRoomService classRoomService;
 
     @PostMapping("/post")
-    public void postClassRomm(@RequestBody ClassRoomRequest classRequest){
-        classRoomService.saveClassRoom(classRequest);
+    public ResponseEntity<?> postClassRoom(@RequestBody ClassRoomRequest classRequest){
+        try {
+            classRoomService.saveClassRoom(classRequest);
+            return new ResponseEntity<>("New ClassRoom Successes", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("New ClassRoom Fail", HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping("get")
@@ -30,11 +35,13 @@ public class ClassRoomController {
     }
 
     @PostMapping("/delete")
-    public void deleteClassRoom(@RequestBody ClassRoomRequest classRoomRequest){
+    public ResponseEntity<?> deleteClassRoom(@RequestBody ClassRoomRequest classRoomRequest){
         try {
             classRoomService.deleteClassRoom(classRoomRequest);
+            return new ResponseEntity<>("Delete ClassRoom Successes", HttpStatus.OK);
         }catch (Exception e){
             System.out.print(e);
+            return new ResponseEntity<>("Delete ClassRoom Fail", HttpStatus.CONFLICT);
         }
     }
 }

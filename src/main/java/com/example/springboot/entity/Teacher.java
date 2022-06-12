@@ -17,9 +17,33 @@ public class Teacher {
     @Column(name = "teacherName", columnDefinition = "varchar(68)", nullable = false)
     private String teacherName;
 
+    @Column(name = "teacherPhoneNumber", columnDefinition = "varchar(68)", nullable = false)
+    private String teacherPhoneNumber;
+
     @JsonManagedReference
     @OneToOne(mappedBy = "teacher",cascade = CascadeType.ALL)
     private Belong belong;
+
+    @OneToOne(mappedBy = "teacher",cascade = CascadeType.ALL,orphanRemoval=true)
+    private Teach teach;
+
+    public String getTeacherPhoneNumber() {
+        return teacherPhoneNumber;
+    }
+
+    public void setTeacherPhoneNumber(String teacherPhoneNumber) {
+        this.teacherPhoneNumber = teacherPhoneNumber;
+    }
+
+    public Teach getTeach() {
+        return teach;
+    }
+
+    public void setTeach(Teach teach) {
+        this.teach = teach;
+    }
+
+
 
     public Long getTeacherId() {
         return teacherId;
@@ -45,7 +69,8 @@ public class Teacher {
         this.belong = belong;
     }
 
-    public Teacher(String teacher_name) {
-        this.teacherName = teacher_name;
+    public Teacher(String teacherName, String teacherPhoneNumber) {
+        this.teacherName = teacherName;
+        this.teacherPhoneNumber = teacherPhoneNumber;
     }
 }

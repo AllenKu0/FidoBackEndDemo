@@ -1,8 +1,6 @@
 package com.example.springboot.request;
 
-import javax.persistence.Column;
-
-public class UserRegisterRequest {
+public class UserLoginRequest {
     public String getPassword() {
         return password;
     }

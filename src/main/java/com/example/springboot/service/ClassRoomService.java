@@ -17,7 +17,8 @@ public class ClassRoomService {
     ClassRoomRepository classRoomRepository;
 
     public void saveClassRoom(ClassRoomRequest classRoomRequest){
-        ClassRoom classRoom = new ClassRoom(classRoomRequest.getClassName());
+        ClassRoom classRoom = new ClassRoom(classRoomRequest.getClassName()
+                ,classRoomRequest.getClassPhoneNumber(),classRoomRequest.getClassLocation());
         classRoomRepository.save(classRoom);
     }
 
@@ -27,6 +28,8 @@ public class ClassRoomService {
             ClassRoomResponse response = new ClassRoomResponse(
                     classRoom.getClassId()
                     , classRoom.getClassName()
+                    ,classRoom.getClassLocation()
+                    ,classRoom.getClassPhoneNumber()
             );
             classRoomResponses.add(response);
         }

@@ -6,6 +6,7 @@ import com.example.springboot.exception.AlreadyExistsException;
 import com.example.springboot.repository.AuthenticatorRepository;
 import com.example.springboot.repository.UserRepository;
 import com.example.springboot.request.FinishAuthRequest;
+import com.example.springboot.request.UserLoginRequest;
 import com.example.springboot.request.UserRegisterRequest;
 import com.example.springboot.request.WelcomRequest;
 import com.example.springboot.utitlity.UserMapper;
@@ -34,136 +35,54 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+//    @Autowired
+//    private BCryptPasswordEncoder bCryptPasswordEncoder;
+//
+//    @Autowired
+//    private UserMapper userMapper;
+//
+//    @Autowired
+//    private AuthenticatorRepository authenticatorRepository;
+//
+//
+//    private final Cache<ByteArray, PublicKeyCredentialCreationOptions> registrationCache;
+//    private final Cache<String,  AssertionRequest> loginCache;
+//    public UserService() {
+//        this.loginCache = Caffeine.newBuilder().maximumSize(1000)
+//                .expireAfterAccess(5, TimeUnit.MINUTES).build();
+//        this.registrationCache = Caffeine.newBuilder().maximumSize(1000)
+//                .expireAfterAccess(5, TimeUnit.MINUTES).build();
+//    }
 
-    @Autowired
-    private UserMapper userMapper;
+    public UserService(){
 
-    @Autowired
-    private AuthenticatorRepository authenticatorRepository;
-
-
-    private final Cache<ByteArray, PublicKeyCredentialCreationOptions> registrationCache;
-    private final Cache<String,  AssertionRequest> loginCache;
-    public UserService() {
-        this.loginCache = Caffeine.newBuilder().maximumSize(1000)
-                .expireAfterAccess(5, TimeUnit.MINUTES).build();
-        this.registrationCache = Caffeine.newBuilder().maximumSize(1000)
-                .expireAfterAccess(5, TimeUnit.MINUTES).build();
     }
-
     @Transactional(rollbackFor = Exception.class)
-    public User register(UserRegisterRequest dto) {
-        Optional<User> userOptional = findByEmail(dto.getUsername());
+    public void register(UserRegisterRequest userRegisterRequest) {
+        Optional<User> userOptional = userRepository.findByAccount(userRegisterRequest.getAccount());
         if (userOptional.isPresent()) {
             throw new AlreadyExistsException("Save failed, the user name already exist.");
         }
-
-        UserIdentity userIdentity = UserIdentity.builder()
-                .name(dto.getUsername())
-                .displayName(dto.getDisplayName())
-                .id(Utility.generateRandom(32))
-                .build();
-        User user = new User(userIdentity);
-        String cryptPassword = bCryptPasswordEncoder.encode(dto.getPassword());
-        user.setPassword(cryptPassword);
+        User user = new User(userRegisterRequest);
         userRepository.save(user);
-        return user;
-
     }
 
     public Optional<User> findByEmail(String userName) {
         return userRepository.findByEmail(userName);
     }
 
-
-    public String newAuthRegistration(
-            User user,
-            RelyingParty relyingParty) {
-        Optional<User> existingUser = userRepository.findByHandle(user.getHandle());
-        if (existingUser.isPresent()) {
-            UserIdentity userIdentity = user.toUserIdentity();
-            StartRegistrationOptions registrationOptions = StartRegistrationOptions.builder()
-                    .user(userIdentity)
-                    .build();
-
-//            HttpSession session
-
-//            registrationCache.setAttribute(userIdentity.getDisplayName(), registration);
-            try {
-                PublicKeyCredentialCreationOptions registration = relyingParty.startRegistration(registrationOptions);
-                this.registrationCache.put(userIdentity.getId(), registration);
-                return registration.toCredentialsCreateJson();
-            } catch (JsonProcessingException e) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing JSON.", e);
+    public String startLogin(UserLoginRequest userLoginRequest) {
+        Optional<User> userOptional = userRepository.findByAccount(userLoginRequest.getAccount());
+        if(userOptional.isPresent()){
+            if(userOptional.get().getPassword().equals(userLoginRequest.getPassword())){
+//                System.out.println(userOptional.get().getPassword());
+//                System.out.println(userLoginRequest.getPassword());
+                return "Login Suesses";
+            }else{
+                throw new AlreadyExistsException("login failed, the password was wrong.");
             }
-        } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmail() + " does not exist. Please register.");
+        }else{
+            throw new AlreadyExistsException("login failed, the user name dosen't exist.");
         }
-    }
-
-
-    public String startLogin(String username, RelyingParty relyingParty) throws JsonProcessingException {
-        AssertionRequest request = relyingParty.startAssertion(StartAssertionOptions.builder()
-                .username(username)
-                .build());
-
-            loginCache.put(username,request);
-            return request.toCredentialsGetJson();
-
-    }
-
-    public void finishAuth(FinishAuthRequest request, RelyingParty relyingParty) throws IOException, RegistrationFailedException {
-        Optional<User> user = findByEmail(request.getUsername());
-        if (user.isPresent()) {
-            PublicKeyCredentialCreationOptions requestOptions = (PublicKeyCredentialCreationOptions) registrationCache.getIfPresent(user.get().getHandle());
-            this.registrationCache.invalidate(user.get().getHandle());
-
-            if (requestOptions != null) {
-                PublicKeyCredential<AuthenticatorAttestationResponse, ClientRegistrationExtensionOutputs> pkc =
-                        PublicKeyCredential.parseRegistrationResponseJson(request.getCredential());
-                FinishRegistrationOptions options = FinishRegistrationOptions.builder()
-                        .request(requestOptions)
-                        .response(pkc)
-                        .build();
-                RegistrationResult result = relyingParty.finishRegistration(options);
-                Authenticator savedAuth = new Authenticator(result, pkc.getResponse(), user.get(), request.getCredname());
-                authenticatorRepository.save(savedAuth);
-            } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Cached request expired. Try to register again!");
-            }
-
-
-        }
-    }
-
-
-    public AssertionResult finishLogin(WelcomRequest welcomRequest, RelyingParty relyingParty){
-        try {
-            PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs> pkc;
-            pkc = PublicKeyCredential.parseAssertionResponseJson(welcomRequest.getCredential());
-            AssertionRequest request = (AssertionRequest)loginCache.getIfPresent(welcomRequest.getUsername());
-            AssertionResult result = relyingParty.finishAssertion(FinishAssertionOptions.builder()
-                    .request(request)
-                    .response(pkc)
-                    .build());
-           return result;
-        } catch (IOException e) {
-            throw new RuntimeException("Authentication failed", e);
-        } catch (AssertionFailedException e) {
-            throw new RuntimeException("Authentication failed", e);
-        }
-    }
-
-    public AssertionResult finishLogin(String credential, String username, RelyingParty relyingParty) throws IOException, AssertionFailedException {
-        PublicKeyCredential<AuthenticatorAssertionResponse, ClientAssertionExtensionOutputs> pkc;
-        pkc = PublicKeyCredential.parseAssertionResponseJson(credential);
-        AssertionRequest request = (AssertionRequest)loginCache.getIfPresent(username);
-        AssertionResult result = relyingParty.finishAssertion(FinishAssertionOptions.builder()
-                .request(request)
-                .response(pkc)
-                .build());
-        return result;
     }
 }

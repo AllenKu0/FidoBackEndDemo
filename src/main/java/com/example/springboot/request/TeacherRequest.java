@@ -6,20 +6,31 @@ import javax.persistence.*;
 
 public class TeacherRequest {
 
-    private String teacher_name;
+    private String teacherName;
 
-    public String getTeacher_name() {
-        return teacher_name;
+    private String teacherPhoneNumber;
+
+    public String getTeacherName() {
+        return teacherName;
     }
 
-    public void setTeacher_name(String teacher_name) {
-        this.teacher_name = teacher_name;
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public String getTeacherPhoneNumber() {
+        return teacherPhoneNumber;
+    }
+
+    public void setTeacherPhoneNumber(String teacherPhoneNumber) {
+        this.teacherPhoneNumber = teacherPhoneNumber;
     }
 
     public TeacherRequest() {
     }
 
-    public TeacherRequest(String teacher_name) {
-        this.teacher_name = teacher_name;
+    public TeacherRequest(String teacherName, String teacherPhoneNumber) {
+        this.teacherName = teacherName;
+        this.teacherPhoneNumber = teacherPhoneNumber;
     }
 }

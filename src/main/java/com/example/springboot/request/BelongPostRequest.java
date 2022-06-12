@@ -1,14 +1,14 @@
 package com.example.springboot.request;
 
 public class BelongPostRequest {
-    private Long classRoom_id ;
+    private Long office_id ;
 
-    public Long getClassRoom_id() {
-        return classRoom_id;
+    public Long getOffice_id() {
+        return office_id;
     }
 
-    public void setClassRoom_id(Long classRoom_id) {
-        this.classRoom_id = classRoom_id;
+    public void setOffice_id(Long office_id) {
+        this.office_id = office_id;
     }
 
     public Long getTeacher_id() {
@@ -21,8 +21,8 @@ public class BelongPostRequest {
 
     private Long teacher_id;
 
-    public BelongPostRequest(Long classRoom_id, Long teacher_id) {
-        this.classRoom_id = classRoom_id;
+    public BelongPostRequest(Long office_id, Long teacher_id) {
+        this.office_id = office_id;
         this.teacher_id = teacher_id;
     }
 }

@@ -1,8 +1,7 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.repository.CourseSelectionRepository;
+import com.example.springboot.request.CourseSelectionFindRequest;
 import com.example.springboot.request.CourseSelectionRequest;
-import com.example.springboot.request.CourseSelectionUserIdRequest;
 import com.example.springboot.service.CourseSelectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,28 +15,32 @@ public class CourseSelectionController {
     CourseSelectionService courseSelectionService;
 
     @PostMapping("/select")
-    public void courseSelect(@RequestBody CourseSelectionRequest courseSelectionRequest){
+    public ResponseEntity<?> courseSelect(@RequestBody CourseSelectionRequest courseSelectionRequest){
        try {
            courseSelectionService.saveCourse(courseSelectionRequest);
+           return new ResponseEntity<>("select successes", HttpStatus.OK);
        }catch (Exception e){
            System.out.print(e);
+           return new ResponseEntity<>("select fail", HttpStatus.OK);
        }
     }
 
     @PostMapping("/delete")
-    public void courseDelete(@RequestBody CourseSelectionRequest courseSelectionRequest){
+    public ResponseEntity<?> courseDelete(@RequestBody CourseSelectionRequest courseSelectionRequest){
         try {
             courseSelectionService.deleteCourse(courseSelectionRequest);
+            return new ResponseEntity<>("delete successes", HttpStatus.OK);
         }catch (Exception e){
             System.out.print(e);
+            return new ResponseEntity<>("delete fail", HttpStatus.OK);
         }
     }
 
     @GetMapping("/getByUser")
-    public ResponseEntity<?> courseGetByUser(@RequestBody CourseSelectionUserIdRequest courseSelectionUserIdRequest){
+    public ResponseEntity<?> courseGetByUser(@RequestParam (value = "account",defaultValue = "")String account){
         System.out.print("aaaaaaa");
         try {
-            return new ResponseEntity<>(courseSelectionService.getAllLesson(courseSelectionUserIdRequest), HttpStatus.OK);
+            return new ResponseEntity<>(courseSelectionService.getAllLesson(account), HttpStatus.OK);
         }catch (Exception e){
             System.out.print(e);
             return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);

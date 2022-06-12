@@ -18,10 +18,9 @@ public class BelongController {
     BelongService belongService;
 
     @GetMapping("/get")
-    public ResponseEntity<? extends Object> getClassRoomByTeacher(@RequestBody BelongRequest belongRequest){
-
+    public ResponseEntity<? extends Object> getClassRoomByTeacher(@RequestParam String teacherName){
         try {
-            return new ResponseEntity<>(belongService.getClassRoomByTeacherId(belongRequest),HttpStatus.OK);
+            return new ResponseEntity<>(belongService.getClassRoomByTeacherId(teacherName),HttpStatus.OK);
         }catch (Exception e){
             System.out.print(e);
             return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
@@ -29,20 +28,24 @@ public class BelongController {
     }
 
     @PostMapping("/post")
-    public void postBelong(@RequestBody BelongPostRequest belongPostRequest){
+    public ResponseEntity<?> postBelong(@RequestBody BelongPostRequest belongPostRequest){
         try {
             belongService.saveBelong(belongPostRequest);
+            return new ResponseEntity<>("New Belong Successes",HttpStatus.OK);
         }catch (Exception e){
             System.out.print(e);
+            return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/delete")
-    public void deleteBelong(@RequestBody BelongRequest belongRequest){
+    public ResponseEntity<?> deleteBelong(@RequestBody BelongRequest belongRequest){
         try {
             belongService.deleteBelong(belongRequest);
+            return new ResponseEntity<>("Delete Belong Successes",HttpStatus.OK);
         }catch (Exception e){
             System.out.print(e);
+            return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
         }
     }
 }

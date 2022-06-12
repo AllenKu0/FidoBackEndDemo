@@ -5,7 +5,6 @@ import com.example.springboot.entity.Teacher;
 import com.example.springboot.repository.LessonRepository;
 import com.example.springboot.repository.TeacherRepository;
 import com.example.springboot.request.TeacherRequest;
-import com.example.springboot.response.ListLessonResponse;
 import com.example.springboot.response.TeacherResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class TeacherService {
     private TeacherRepository teacherRepository;
 
     public void saveTeacher(TeacherRequest teacherRequest) {
-        Teacher teacher = new Teacher(teacherRequest.getTeacher_name());
+        Teacher teacher = new Teacher(teacherRequest.getTeacherName(),teacherRequest.getTeacherPhoneNumber());
         teacherRepository.save(teacher);
     }
 
@@ -30,14 +29,15 @@ public class TeacherService {
             TeacherResponse response = new TeacherResponse(
                     teacher.getTeacherId()
                     , teacher.getTeacherName()
+                    ,teacher.getTeacherPhoneNumber()
             );
             teacherResponses.add(response);
         }
         return teacherResponses;
     }
 
-    public void deleteTeacher(TeacherRequest teacherRequest){
-        Optional<Teacher> teacher = teacherRepository.findTeacherByTeacherName(teacherRequest.getTeacher_name());
+    public void deleteTeacher(String teacherName){
+        Optional<Teacher> teacher = teacherRepository.findTeacherByTeacherName(teacherName);
         if(teacher.isPresent()){
             teacherRepository.delete(teacher.get());
         }

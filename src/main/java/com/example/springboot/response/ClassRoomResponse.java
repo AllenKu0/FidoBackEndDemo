@@ -9,6 +9,26 @@ public class ClassRoomResponse {
 
     private String className;
 
+    private String classLocation;
+
+    private String classRoomPhoneNumber;
+
+    public String getClassRoomPhoneNumber() {
+        return classRoomPhoneNumber;
+    }
+
+    public void setClassRoomPhoneNumber(String classRoomPhoneNumber) {
+        this.classRoomPhoneNumber = classRoomPhoneNumber;
+    }
+
+    public String getClassLocation() {
+        return classLocation;
+    }
+
+    public void setClassLocation(String classLocation) {
+        this.classLocation = classLocation;
+    }
+
     public Long getClassId() {
         return classId;
     }
@@ -25,8 +45,11 @@ public class ClassRoomResponse {
         this.className = className;
     }
 
-    public ClassRoomResponse(Long classId, String className) {
+    public ClassRoomResponse(Long classId, String className, String classLocation, String classRoomPhoneNumber) {
         this.classId = classId;
         this.className = className;
+        this.classLocation = classLocation;
+        this.classRoomPhoneNumber = classRoomPhoneNumber;
     }
+
 }

@@ -10,6 +10,16 @@ public class TeacherResponse {
 
     private String teacher_name;
 
+    private String teacher_phoneNumber;
+
+    public String getTeacher_phoneNumber() {
+        return teacher_phoneNumber;
+    }
+
+    public void setTeacher_phoneNumber(String teacher_phoneNumber) {
+        this.teacher_phoneNumber = teacher_phoneNumber;
+    }
+
     public Long getTeacher_id() {
         return teacher_id;
     }
@@ -26,8 +36,9 @@ public class TeacherResponse {
         this.teacher_name = teacher_name;
     }
 
-    public TeacherResponse(Long teacher_id, String teacher_name) {
+    public TeacherResponse(Long teacher_id, String teacher_name,String teacher_phoneNumber) {
         this.teacher_id = teacher_id;
         this.teacher_name = teacher_name;
+        this.teacher_phoneNumber = teacher_phoneNumber;
     }
 }

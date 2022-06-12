@@ -24,9 +24,9 @@ public class ViewController {
     private RelyingParty relyingParty;
 
 
-    ViewController(RelyingParty relyingPary) {
-        this.relyingParty = relyingPary;
-    }
+//    ViewController(RelyingParty relyingPary) {
+//        this.relyingParty = relyingPary;
+//    }
 
     @GetMapping("/home")
     public String welcome() {

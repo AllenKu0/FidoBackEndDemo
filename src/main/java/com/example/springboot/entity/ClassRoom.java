@@ -17,16 +17,38 @@ public class ClassRoom {
 
     @Column(name = "className", columnDefinition = "varchar(68)", nullable = false)
     private String className;
-    @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<Belong> belong;
 
-    public Set<Belong> getBelong() {
-        return belong;
+    @Column(name = "classPhoneNumber", columnDefinition = "varchar(68)", nullable = false)
+    private String classPhoneNumber;
+
+    @Column(name = "classLocation", columnDefinition = "varchar(68)", nullable = false)
+    private String classLocation;
+
+    @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TeachOn> teachOns;
+
+    public Set<TeachOn> getTeachOns() {
+        return teachOns;
     }
 
-    public void setBelong(Set<Belong> belong) {
-        this.belong = belong;
+    public void setTeachOns(Set<TeachOn> teachOns) {
+        this.teachOns = teachOns;
+    }
+
+    public String getClassPhoneNumber() {
+        return classPhoneNumber;
+    }
+
+    public void setClassPhoneNumber(String classPhoneNumber) {
+        this.classPhoneNumber = classPhoneNumber;
+    }
+
+    public String getClassLocation() {
+        return classLocation;
+    }
+
+    public void setClassLocation(String classLocation) {
+        this.classLocation = classLocation;
     }
 
     public Long getClassId() {
@@ -41,11 +63,13 @@ public class ClassRoom {
         return className;
     }
 
-    public ClassRoom(String className) {
+    public void setClassName(String className) {
         this.className = className;
     }
 
-    public void setClassName(String className) {
+    public ClassRoom(String className, String classPhoneNumber, String classLocation) {
         this.className = className;
+        this.classPhoneNumber = classPhoneNumber;
+        this.classLocation = classLocation;
     }
 }

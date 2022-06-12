@@ -1,9 +1,11 @@
 package com.example.springboot.entity;
 
+import com.example.springboot.request.UserRegisterRequest;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yubico.webauthn.data.ByteArray;
 import com.yubico.webauthn.data.UserIdentity;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.util.Set;
 
@@ -13,7 +15,6 @@ public class User {
         this.id = id;
     }
 
-
     public User() {
 
     }
@@ -22,21 +23,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "account", columnDefinition = "varchar(68)", nullable = false)
+    private String account;
     @Column(name = "password", columnDefinition = "varchar(68)", nullable = false)
     private String password;
 
-    @Column(name = "email", columnDefinition = "varchar(40)", nullable = false)
+
+    @Column(name = "email", columnDefinition = "varchar(40)")
+    @Nullable
     private String email;
-
-    @Column(name = "token")
-    private String token;
-
-    @Column(nullable = false)
-    private String displayName;
-
-    @Lob
-    @Column(nullable = false, length = 64)
-    private ByteArray handle;
 
     @JsonManagedReference
     @OneToMany(mappedBy="user",cascade = CascadeType.ALL)
@@ -50,37 +45,18 @@ public class User {
         this.courseSelection = courseSelection;
     }
 
-    public User(UserIdentity user) {
-        this.handle = user.getId();
-        this.email = user.getName();
-        this.displayName = user.getDisplayName();
+    public String getAccount() {
+        return account;
     }
 
-    public UserIdentity toUserIdentity() {
-        return UserIdentity.builder()
-                .name(getEmail())
-                .displayName(getDisplayName())
-                .id(getHandle())
-                .build();
+    public void setAccount(String account) {
+        this.account = account;
     }
 
-
-    public String getDisplayName() {
-        return displayName;
+    public User(UserRegisterRequest user) {
+        this.account = user.getAccount();
+        this.password = user.getPassword();
     }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public ByteArray getHandle() {
-        return handle;
-    }
-
-    public void setHandle(ByteArray handle) {
-        this.handle = handle;
-    }
-
 
     public Long getId() {
         return id;
@@ -106,11 +82,4 @@ public class User {
         this.email = email;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 }
