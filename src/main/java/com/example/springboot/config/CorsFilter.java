@@ -21,20 +21,20 @@ public class CorsFilter implements Filter {
         String requestOrigin = request.getHeader("Origin");
         System.out.println("Cors : " + requestOrigin);
         if (requestOrigin==null){
-//            System.out.println("Access-Control-Allow-Origin NULL: http://123.241.245.130:8080" );
-//            response.addHeader("Access-Control-Allow-Origin", "http://123.241.245.130:8080");
-            System.out.println("Access-Control-Allow-Origin NULL: http://192.168.68.102:8080" );
-            response.addHeader("Access-Control-Allow-Origin","http://192.168.68.102:8080");
+            System.out.println("Access-Control-Allow-Origin NULL: http://123.241.245.130:8080" );
+            response.addHeader("Access-Control-Allow-Origin", "http://123.241.245.130:8080");
+//            System.out.println("Access-Control-Allow-Origin NULL: http://192.168.68.102:8080" );
+//            response.addHeader("Access-Control-Allow-Origin","http://192.168.68.102:8080");
         }
         else if (requestOrigin.equals(URL)){
             System.out.println("Access-Control-Allow-Origin : " + requestOrigin);
             response.addHeader("Access-Control-Allow-Origin", requestOrigin);
         }
         else {
-//            System.out.println("Access-Control-Allow-Origin : http://123.241.245.130:8080" );
-//            response.addHeader("Access-Control-Allow-Origin", "http://123.241.245.130:8080");
-            System.out.println("Access-Control-Allow-Origin : http://192.168.68.102:8080" );
-            response.addHeader("Access-Control-Allow-Origin","http://192.168.68.102:8080");
+            System.out.println("Access-Control-Allow-Origin : http://123.241.245.130:8080" );
+            response.addHeader("Access-Control-Allow-Origin", "http://123.241.245.130:8080");
+//            System.out.println("Access-Control-Allow-Origin : http://192.168.68.102:8080" );
+//            response.addHeader("Access-Control-Allow-Origin","http://192.168.68.102:8080");
         }
 //        response.setHeader("Access-Control-Allow-Origin","http://localhost:8080,http://123.241.245.130:8080/");
         response.setHeader("Access-Control-Allow-Credentials", "true");
