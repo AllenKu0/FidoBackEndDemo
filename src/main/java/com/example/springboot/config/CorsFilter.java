@@ -1,6 +1,8 @@
 package com.example.springboot.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -37,6 +39,7 @@ public class CorsFilter implements Filter {
 //            response.addHeader("Access-Control-Allow-Origin","http://192.168.68.102:8080");
         }
 //        response.setHeader("Access-Control-Allow-Origin","http://localhost:8080,http://123.241.245.130:8080/");
+        response.setHeader("Access-Control-Allow-Origin","*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT");
         response.setHeader("Access-Control-Max-Age", "3600");
